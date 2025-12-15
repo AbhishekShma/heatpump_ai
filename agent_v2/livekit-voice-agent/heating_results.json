@@ -1,0 +1,8 @@
+[
+  {
+    "room": "unit-test-room",
+    "status": "done",
+    "notified": true,
+    "job_id": "job-test-1"
+  }
+]

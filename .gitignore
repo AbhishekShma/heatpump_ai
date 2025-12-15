@@ -1,0 +1,6 @@
+agent_v2/livekit-voice-agent/__pycache__
+agent_v2/livekit-voice-agent/.venv
+agent_v2/livekit-voice-agent/KMS
+agent_v2/livekit-voice-agent/random_dump.txt
+agent_v2/livekit-voice-agent/pyproject.toml
+agent_v2/livekit-voice-agent/.env.local

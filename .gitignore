@@ -11,7 +11,7 @@ agent_v3/**/.venv/
 agent_v3/**/__pycache__/
 agent_v3/**/*.pyc
 agent_v3/**/*.pyo
-agent_v3/**/*.pyd
+agent_v3/**/*.pydgit@github.com:AbhishekShma/heatpump_ai.git
 agent_v3/**/.Python
 
 # Agent v3 - Frontend (Node.js)

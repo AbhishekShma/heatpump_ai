@@ -1,14 +1,13 @@
-# Agent V3 - LiveKit Voice Agent with Frontend & Backend
+# Agent V3 - LiveKit Voice Agent with Token Server
 
-Complete setup for a LiveKit voice agent with turn detection, token server backend, and React frontend.
+Complete setup for a LiveKit voice agent with turn detection and token server backend.
 
 ## Structure
 
 ```
 agent_v3/
 ├── livekit_voice_agent/  # Main agent code
-├── token_server/          # FastAPI backend for token generation
-└── frontend/              # React frontend application
+└── token_server/          # FastAPI backend for token generation
 ```
 
 ## Setup Instructions
@@ -32,18 +31,6 @@ uv run token_server.py
 ```
 
 The server will run on `http://localhost:8000` and provide tokens at `/token` endpoint.
-
-### 3. Frontend
-
-Install dependencies and start the frontend:
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-The frontend will run on `http://localhost:5173`.
 
 ## Environment Variables
 
@@ -70,28 +57,20 @@ OPENAI_API_KEY=your_openai_api_key  # Required for OpenAI Realtime API
    uv run token_server.py
    ```
 
-3. **Terminal 3** - Start the frontend:
-   ```bash
-   cd agent_v3/frontend
-   npm run dev
-   ```
-
-4. Open `http://localhost:5173` in your browser and click the microphone button to start talking to the agent!
+The token server will be available at `http://localhost:8000/token` for generating LiveKit access tokens.
 
 ## Features
 
 - ✅ OpenAI Realtime API with built-in turn detection, STT, LLM, and TTS
 - ✅ No local model downloads required - everything runs via API
 - ✅ FastAPI backend for token generation
-- ✅ React frontend with LiveKit components
-- ✅ Audio visualizer showing agent state
-- ✅ Microphone controls
+- ✅ Agent name configured as "assistant" for explicit dispatch
 
 ## Notes
 
 - Uses OpenAI Realtime API which includes all components (STT, LLM, TTS, turn detection) - no local models needed
 - Requires `OPENAI_API_KEY` environment variable to be set
-- The agent name is set to `"assistant"` - make sure this matches in both the agent code and token server metadata
-- CORS is configured to allow requests from `localhost:5173` (frontend) and `localhost:8000` (backend)
+- The agent name is set to `"assistant"` in both `agent.py` (via `@server.rtc_session(agent_name="assistant")`) and token server metadata - they must match
+- CORS is configured in the token server to allow requests from common localhost ports
 - Voice can be changed in `agent.py` - available voices: alloy, echo, fable, onyx, nova, shimmer, coral (default)
 

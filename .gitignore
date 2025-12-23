@@ -33,6 +33,9 @@ agent_v3/**/*.swp
 agent_v3/**/*.swo
 agent_v3/**/*~
 
+# Cursor IDE
+.cursor/
+
 # Agent v3 - OS files
 agent_v3/**/.DS_Store
 agent_v3/**/Thumbs.db

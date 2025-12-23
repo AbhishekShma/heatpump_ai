@@ -5,3 +5,37 @@ agent_v2/livekit-voice-agent/random_dump.txt
 agent_v2/livekit-voice-agent/.env
 .env
 tables_csv
+
+# Agent v3 - Python virtual environments
+agent_v3/**/.venv/
+agent_v3/**/__pycache__/
+agent_v3/**/*.pyc
+agent_v3/**/*.pyo
+agent_v3/**/*.pyd
+agent_v3/**/.Python
+
+# Agent v3 - Frontend (Node.js)
+agent_v3/frontend/node_modules/
+agent_v3/frontend/dist/
+agent_v3/frontend/build/
+agent_v3/frontend/.vite/
+agent_v3/frontend/*.local
+
+# Agent v3 - Environment files
+agent_v3/**/.env
+agent_v3/**/.env.local
+agent_v3/**/.env.*.local
+
+# Agent v3 - IDE and editor files
+agent_v3/**/.vscode/
+agent_v3/**/.idea/
+agent_v3/**/*.swp
+agent_v3/**/*.swo
+agent_v3/**/*~
+
+# Agent v3 - OS files
+agent_v3/**/.DS_Store
+agent_v3/**/Thumbs.db
+
+# Agent v3 - Jupyter notebooks checkpoints
+agent_v3/**/.ipynb_checkpoints/

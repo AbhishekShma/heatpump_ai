@@ -33,7 +33,7 @@ class Assistant(Agent):
 server = AgentServer()
 
 
-@server.rtc_session()
+@server.rtc_session(agent_name="assistant")
 async def my_agent(ctx: agents.JobContext):
     """
     Main agent session handler.

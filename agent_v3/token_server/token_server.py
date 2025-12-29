@@ -7,7 +7,7 @@ to LiveKit rooms and request agent dispatch.
 
 from dotenv import load_dotenv
 from livekit import api
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import os
 import json
@@ -30,16 +30,11 @@ app.add_middleware(
 @app.get("/token")
 def token():
     """
-    Generate a LiveKit access token with agent dispatch metadata.
+    Generate a LiveKit access token.
     
     Returns:
         dict: Contains 'token' (JWT string) and 'url' (LiveKit WebSocket URL)
     """
-    meta = {
-        "lk.agent.request": True,
-        "lk.agent.name": "assistant",
-    }
-    print("ISSUING TOKEN WITH METADATA:", meta)
     print("USING LIVEKIT_URL =", os.environ["LIVEKIT_URL"], flush=True)
     
     token = (
@@ -55,16 +50,45 @@ def token():
                 room="test-room",
             )
         )
-        .with_metadata(json.dumps({
-            "lk.agent.request": True,
-            "lk.agent.name": "assistant",
-        }))
     )
-
+    
     return {
         "token": token.to_jwt(),
         "url": os.environ["LIVEKIT_URL"],
     }
+
+
+@app.post("/dispatch-agent")
+async def dispatch_agent():
+    """
+    Explicitly dispatch the agent to the room.
+    This is required for named agents.
+    
+    Returns:
+        dict: Success status
+    """
+    try:
+        # Create LiveKit API client
+        lkapi = api.LiveKitAPI(
+            os.environ["LIVEKIT_URL"],
+            os.environ["LIVEKIT_API_KEY"],
+            os.environ["LIVEKIT_API_SECRET"],
+        )
+        
+        # Dispatch agent to room
+        dispatch = await lkapi.agent_dispatch.create_dispatch(
+            api.CreateAgentDispatchRequest(
+                agent_name="assistant",
+                room="test-room",
+            )
+        )
+        
+        print(f"Agent dispatched to test-room: {dispatch}")
+        await lkapi.aclose()
+        return {"success": True, "message": "Agent dispatched"}
+    except Exception as e:
+        print(f"Error dispatching agent: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 if __name__ == "__main__":

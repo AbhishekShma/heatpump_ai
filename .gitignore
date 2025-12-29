@@ -14,12 +14,6 @@ agent_v3/**/*.pyo
 agent_v3/**/*.pydgit@github.com:AbhishekShma/heatpump_ai.git
 agent_v3/**/.Python
 
-# Agent v3 - Frontend (Node.js)
-agent_v3/frontend/node_modules/
-agent_v3/frontend/dist/
-agent_v3/frontend/build/
-agent_v3/frontend/.vite/
-agent_v3/frontend/*.local
 
 # Agent v3 - Environment files
 agent_v3/**/.env
@@ -42,3 +36,13 @@ agent_v3/**/Thumbs.db
 
 # Agent v3 - Jupyter notebooks checkpoints
 agent_v3/**/.ipynb_checkpoints/
+
+# Agent v3 - testing
+agent_v3/**/test.ipynb
+
+/**/test.*
+/**/try.*
+
+# Massive geoname files with postal codes for many countries
+climate_data_prep/allCountries.csv
+climate_data_prep/allCountries.txt

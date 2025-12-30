@@ -1,6 +1,6 @@
 Start the agent: 
 cd agent_v3/livekit_voice_agent
-uv run agent.py dev
+uv run agent.py start
 
 Start the backend: 
 cd agent_v3/token_server 

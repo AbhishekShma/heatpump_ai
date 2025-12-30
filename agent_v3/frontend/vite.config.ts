@@ -3,7 +3,11 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   server: {
     port: 5173,
-    host: true,
+    host: '0.0.0.0', // Listen on all network interfaces for server deployment
+    strictPort: true, // Exit if port is already in use
   },
 });
+
+
+
 

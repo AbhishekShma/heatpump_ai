@@ -1,48 +1,132 @@
-agent_v2/livekit-voice-agent/__pycache__
-agent_v2/livekit-voice-agent/.venv
-agent_v2/livekit-voice-agent/KMS
-agent_v2/livekit-voice-agent/random_dump.txt
-agent_v2/livekit-voice-agent/.env
+# Environment variables
 .env
-tables_csv
+.env.local
+.env.*.local
+**/.env
+**/.env.local
+**/.env.*.local
 
-# Agent v3 - Python virtual environments
-agent_v3/**/.venv/
-agent_v3/**/__pycache__/
-agent_v3/**/*.pyc
-agent_v3/**/*.pyo
-agent_v3/**/*.pydgit@github.com:AbhishekShma/heatpump_ai.git
-agent_v3/**/.Python
+# Python
+**/__pycache__/
+**/*.py[cod]
+**/*$py.class
+**/*.so
+**/.Python
+**/build/
+**/develop-eggs/
+**/downloads/
+**/eggs/
+**/.eggs/
+**/lib/
+**/lib64/
+**/parts/
+**/sdist/
+**/var/
+**/wheels/
+**/*.egg-info/
+**/.installed.cfg
+**/*.egg
+**/MANIFEST
+**/.pytest_cache/
+**/.mypy_cache/
+**/.dmypy.json
+**/dmypy.json
+**/.coverage
+**/.coverage.*
+**/htmlcov/
+**/.tox/
+**/.cache
+**/nosetests.xml
+**/coverage.xml
+**/*.cover
+**/.hypothesis/
 
+# Virtual environments
+**/.venv/
+**/venv/
+**/ENV/
+**/env/
 
-# Agent v3 - Environment files
-agent_v3/**/.env
-agent_v3/**/.env.local
-agent_v3/**/.env.*.local
+# Node.js / Frontend
+**/node_modules/
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/lerna-debug.log*
+**/.pnpm-debug.log*
+**/dist/
+**/build/
+**/.next/
+**/.nuxt/
+**/.vite/
+**/.cache/
+**/.parcel-cache/
+**/.turbo/
 
-# Agent v3 - IDE and editor files
-agent_v3/**/.vscode/
-agent_v3/**/.idea/
-agent_v3/**/*.swp
-agent_v3/**/*.swo
-agent_v3/**/*~
+# IDE and editors
+**/.vscode/
+**/.idea/
+**/*.swp
+**/*.swo
+**/*~
+**/.sublime-*
+**/*.sublime-project
+**/*.sublime-workspace
+**/.vs/
+**/.fleet/
+**/.history/
 
 # Cursor IDE
 .cursor/
 
-# Agent v3 - OS files
-agent_v3/**/.DS_Store
-agent_v3/**/Thumbs.db
+# OS files
+**/.DS_Store
+**/.DS_Store?
+**/_._*
+**/.Spotlight-V100
+**/.Trashes
+**/ehthumbs.db
+**/Thumbs.db
+**/Desktop.ini
 
-# Agent v3 - Jupyter notebooks checkpoints
-agent_v3/**/.ipynb_checkpoints/
+# Jupyter Notebooks
+**/.ipynb_checkpoints/
+**/*.ipynb_checkpoints/
 
-# Agent v3 - testing
-agent_v3/**/test.ipynb
+# Logs
+**/*.log
+**/logs/
+**/*.log.*
 
-/**/test.*
-/**/try.*
+# Database files
+**/*.db
+**/*.sqlite
+**/*.sqlite3
+**/*.db-shm
+**/*.db-wal
 
-# Massive geoname files with postal codes for many countries
+# Backup files
+**/*.backup
+**/*.bak
+**/*.old
+**/*.orig
+**/*.tmp
+
+# Testing
+**/test.ipynb
+**/test.*
+**/try.*
+**/.pytest_cache/
+
+# Data files (large CSV/TXT files)
+**/allCountries.csv
+**/allCountries.txt
 climate_data_prep/allCountries.csv
 climate_data_prep/allCountries.txt
+climate_data_prep/climate_data_prep_v1/allCountries.csv
+climate_data_prep/climate_data_prep_v1/allCountries.txt
+
+# Project-specific
+tables_csv
+agent_v2/livekit-voice-agent/KMS
+agent_v2/livekit-voice-agent/random_dump.txt

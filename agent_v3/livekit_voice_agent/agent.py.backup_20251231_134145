@@ -1,0 +1,126 @@
+"""
+LiveKit Voice Agent Boilerplate
+
+A voice AI agent using separate OpenAI components:
+- STT: OpenAI Whisper
+- LLM: OpenAI Chat API
+- TTS: OpenAI TTS
+Runnable in console mode for testing.
+"""
+
+from dotenv import load_dotenv
+
+from livekit import agents, rtc
+from livekit.agents import AgentServer, AgentSession, Agent, room_io
+from livekit.plugins import noise_cancellation, openai, silero
+try:
+    from livekit.plugins import turn_detector
+except ImportError:
+    turn_detector = None
+
+from tools import get_current_time
+from prompts import AGENT_INSTRUCTIONS
+
+# Load environment variables from root-level .env file
+load_dotenv()
+
+
+class Assistant(Agent):
+    """
+    Basic assistant agent with simple instructions.
+    """
+    def __init__(self) -> None:
+        super().__init__(
+            instructions=AGENT_INSTRUCTIONS,
+            tools=[get_current_time],
+        )
+
+
+server = AgentServer()
+
+
+@server.rtc_session(agent_name="assistant")
+async def my_agent(ctx: agents.JobContext):
+    """
+    Main agent session handler.
+    Uses separate OpenAI components: STT (Whisper), LLM (Chat), TTS (OpenAI TTS).
+    """
+    print(f"AGENT DISPATCHED: Room={ctx.room.name}")
+    
+    # Create separate OpenAI components
+    # STT: OpenAI Whisper for speech-to-text
+    stt = openai.STT()
+    # LLM: OpenAI Chat API for language model  
+    llm = openai.LLM()
+    # TTS: OpenAI TTS for text-to-speech
+    tts = openai.TTS(voice="shimmer")  # Options: alloy, echo, fable, onyx, nova, shimmer
+    
+    ##############PRINT STT TEXT ##########################
+    def on_user_speech(speech_event):
+        if hasattr(speech_event, 'alternatives') and speech_event.alternatives:
+            text = speech_event.alternatives[0].text
+            print("🎤 STT:", text)
+        elif hasattr(speech_event, 'text'):
+            print("🎤 STT:", speech_event.text)
+    
+    # Listen for user speech/transcription events
+    ctx.room.on("participant_connected", lambda p: print(f"Participant connected: {p.identity}"))
+    
+    # Turn detection options - try different approaches
+    # If voice detection isn't working, try changing the option below:
+    
+    # Option 1: No VAD - let STT (Whisper) handle voice detection (often more reliable)
+    turn_detection = None
+    
+    # Option 2: Silero VAD (uncomment to try)
+    # turn_detection = silero.VAD.load()
+    
+    # Option 3: Silero VAD Stream (uncomment to try - creates a stream from VAD)
+    # vad = silero.VAD.load()
+    # turn_detection = vad.stream()
+    
+    session = AgentSession(
+        stt=stt,
+        llm=llm,
+        tts=tts,
+        turn_detection=turn_detection,
+    )
+
+    ##############PRINT TTS TEXT (LLM reply) ##########################
+    def on_assistant_response(event):
+        if hasattr(event, 'text') and event.text:
+            print("🗣️ TTS Output Text:", event.text)
+        elif hasattr(event, 'content') and event.content:
+            print("🗣️ TTS Output Text:", event.content)
+
+    session.on("assistant_response", on_assistant_response)
+    
+    # Listen for user messages (transcribed text)
+    def on_user_message(event):
+        if hasattr(event, 'content') and event.content:
+            print("🎤 STT (user_message):", event.content)
+        elif hasattr(event, 'text') and event.text:
+            print("🎤 STT (user_message):", event.text)
+    
+    session.on("user_message", on_user_message)
+
+    await session.start(
+        room=ctx.room,
+        agent=Assistant(),
+        room_options=room_io.RoomOptions(
+            audio_input=room_io.AudioInputOptions(
+                noise_cancellation=lambda params: noise_cancellation.BVCTelephony() 
+                if params.participant.kind == rtc.ParticipantKind.PARTICIPANT_KIND_SIP 
+                else noise_cancellation.BVC(),
+            ),
+        ),
+    )
+
+    await session.generate_reply(
+        instructions=f"Greet the user and begin the assessment as per {AGENT_INSTRUCTIONS}."
+    )
+
+
+if __name__ == "__main__":
+    agents.cli.run_app(server)
+

@@ -1,0 +1,110 @@
+"""
+LiveKit Voice Agent Boilerplate
+
+A minimal voice AI agent using OpenAI Realtime API.
+The Realtime API includes built-in STT, LLM, TTS, and turn detection.
+Runnable in console mode for testing.
+"""
+
+from dotenv import load_dotenv
+
+from livekit import agents, rtc
+from livekit.agents import AgentServer, AgentSession, Agent, room_io
+from livekit.plugins import noise_cancellation, openai
+
+from tools import get_current_time
+from prompts import AGENT_INSTRUCTIONS
+
+# Load environment variables from root-level .env file
+load_dotenv()
+
+
+class Assistant(Agent):
+    """
+    Basic assistant agent with simple instructions.
+    """
+    def __init__(self) -> None:
+        super().__init__(
+            instructions=AGENT_INSTRUCTIONS,
+            tools=[get_current_time],
+        )
+
+
+server = AgentServer()
+
+
+@server.rtc_session(agent_name="assistant")
+async def my_agent(ctx: agents.JobContext):
+    """
+    Main agent session handler.
+    Uses OpenAI Realtime API which includes STT, LLM, TTS, and turn detection.
+    """
+    print(f"AGENT DISPATCHED: Room={ctx.room.name}")
+    
+    # Create LLM model to access its events
+    llm_model = openai.realtime.RealtimeModel(
+        voice="shimmer"  # You can change this to other voices: alloy, echo, fable, onyx, nova, shimmer
+    )
+    
+    ##############PRINT STT TEXT ##########################
+    def on_transcription(event):
+        # Handle different event types from OpenAI Realtime API
+        if hasattr(event, 'transcript'):
+            print("🎤 STT:", event.transcript)
+        elif hasattr(event, 'text'):
+            print("🎤 STT:", event.text)
+        elif hasattr(event, 'delta'):
+            print("🎤 STT:", event.delta)
+        else:
+            # Debug: print event to see its structure
+            print("🎤 STT Event:", event)
+    
+    # Listen to OpenAI Realtime API transcription events
+    # Try multiple possible event names
+    llm_model.on("conversation_item_input_audio_transcription_completed", on_transcription)
+    llm_model.on("input_audio_buffer_speech_stopped", on_transcription)
+    llm_model.on("user_speech", on_transcription)
+    
+    session = AgentSession(
+        # OpenAI Realtime API includes built-in turn detection, STT, LLM, and TTS
+        llm=llm_model,
+        # Turn detection is built into OpenAI Realtime API
+        turn_detection=None,
+    )
+
+    ##############PRINT TTS TEXT (LLM reply) ##########################
+    def on_assistant_response(event):
+        if event.type == "output_text":
+            print("🗣️ TTS Output Text:", event.text)
+
+    session.on("assistant_response", on_assistant_response)
+    
+    # Also try session-level user message events
+    def on_user_message(event):
+        if hasattr(event, 'content'):
+            print("🎤 STT (user_message):", event.content)
+        elif hasattr(event, 'text'):
+            print("🎤 STT (user_message):", event.text)
+    
+    session.on("user_message", on_user_message)
+
+    await session.start(
+        room=ctx.room,
+        agent=Assistant(),
+        room_options=room_io.RoomOptions(
+            audio_input=room_io.AudioInputOptions(
+                noise_cancellation=lambda params: noise_cancellation.BVCTelephony() 
+                if params.participant.kind == rtc.ParticipantKind.PARTICIPANT_KIND_SIP 
+                else noise_cancellation.BVC(),
+            ),
+        ),
+    )
+
+    await session.generate_reply(
+        instructions=f"Greet the user and begin the assessment as per {AGENT_INSTRUCTIONS}."
+    )
+
+
+if __name__ == "__main__":
+    agents.cli.run_app(server)
+

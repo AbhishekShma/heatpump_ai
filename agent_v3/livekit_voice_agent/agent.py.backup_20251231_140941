@@ -1,0 +1,121 @@
+"""
+LiveKit Voice Agent Boilerplate
+
+A minimal voice AI agent using OpenAI Realtime API.
+The Realtime API includes built-in STT, LLM, TTS, and turn detection.
+Runnable in console mode for testing.
+"""
+
+from dotenv import load_dotenv
+
+from livekit import agents, rtc
+from livekit.agents import AgentServer, AgentSession, Agent, room_io
+from livekit.plugins import noise_cancellation, openai
+
+from tools import get_current_time
+from prompts import AGENT_INSTRUCTIONS
+
+# Load environment variables from root-level .env file
+load_dotenv()
+
+
+class Assistant(Agent):
+    """
+    Basic assistant agent with simple instructions.
+    """
+    def __init__(self) -> None:
+        super().__init__(
+            instructions=AGENT_INSTRUCTIONS,
+            tools=[get_current_time],
+        )
+
+
+server = AgentServer()
+
+
+@server.rtc_session(agent_name="assistant")
+async def my_agent(ctx: agents.JobContext):
+    """
+    Main agent session handler.
+    Uses OpenAI Realtime API which includes STT, LLM, TTS, and turn detection.
+    """
+    print(f"AGENT DISPATCHED: Room={ctx.room.name}")
+    
+    session = AgentSession(
+        # OpenAI Realtime API includes built-in turn detection, STT, LLM, and TTS
+        llm=openai.realtime.RealtimeModel(
+            voice="shimmer"  # Options: alloy, echo, fable, onyx, nova, shimmer
+        ),
+        # Turn detection is built into OpenAI Realtime API
+        turn_detection=None,
+    )
+
+    ##############PRINT STT TEXT (User Transcripts) ##########################
+    # According to LiveKit docs, the correct event is 'user_input_transcribed'
+    def on_user_input_transcribed(event):
+        """Handle user transcription events - this is the correct event name"""
+        print("🎤 USER_INPUT_TRANSCRIBED EVENT RECEIVED")
+        # Try different ways to access the transcript
+        if hasattr(event, 'transcript') and event.transcript:
+            print("🎤 STT:", event.transcript)
+        elif hasattr(event, 'text') and event.text:
+            print("🎤 STT:", event.text)
+        elif hasattr(event, 'content') and event.content:
+            print("🎤 STT:", event.content)
+        elif hasattr(event, 'message') and hasattr(event.message, 'content'):
+            print("🎤 STT:", event.message.content)
+        else:
+            # Debug: print the event to see its structure
+            print("🎤 STT Event (debug):", event)
+            print("🎤 STT Event type:", type(event))
+            print("🎤 STT Event dir:", [x for x in dir(event) if not x.startswith('_')])
+            # Try to access common attributes
+            for attr in ['transcript', 'text', 'content', 'message', 'data']:
+                if hasattr(event, attr):
+                    print(f"🎤 Event.{attr}:", getattr(event, attr))
+    
+    # Listen for user input transcription - this is the correct event name
+    session.on("user_input_transcribed", on_user_input_transcribed)
+    
+    # Also try alternative event names as fallback
+    def on_user_message(event):
+        """Fallback handler for user_message events"""
+        print("🎤 USER_MESSAGE EVENT RECEIVED")
+        if hasattr(event, 'content') and event.content:
+            print("🎤 STT (user_message):", event.content)
+        elif hasattr(event, 'text') and event.text:
+            print("🎤 STT (user_message):", event.text)
+    
+    session.on("user_message", on_user_message)
+
+    ##############PRINT TTS TEXT (LLM reply) ##########################
+    def on_assistant_response(event):
+        if hasattr(event, 'type') and event.type == "output_text":
+            print("🗣️ TTS Output Text:", event.text)
+        elif hasattr(event, 'text') and event.text:
+            print("🗣️ TTS Output Text:", event.text)
+        elif hasattr(event, 'content') and event.content:
+            print("🗣️ TTS Output Text:", event.content)
+
+    session.on("assistant_response", on_assistant_response)
+
+    await session.start(
+        room=ctx.room,
+        agent=Assistant(),
+        room_options=room_io.RoomOptions(
+            audio_input=room_io.AudioInputOptions(
+                noise_cancellation=lambda params: noise_cancellation.BVCTelephony() 
+                if params.participant.kind == rtc.ParticipantKind.PARTICIPANT_KIND_SIP 
+                else noise_cancellation.BVC(),
+            ),
+        ),
+    )
+
+    await session.generate_reply(
+        instructions=f"Greet the user and begin the assessment as per {AGENT_INSTRUCTIONS}."
+    )
+
+
+if __name__ == "__main__":
+    agents.cli.run_app(server)
+

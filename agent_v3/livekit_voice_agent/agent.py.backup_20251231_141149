@@ -60,78 +60,52 @@ async def my_agent(ctx: agents.JobContext):
     session.on("user_input_transcribed", on_user_input_transcribed)
 
     ##############PRINT AGENT TRANSCRIPTS (Agent Speech) ##########################
-    # Listen for agent speech committed event (when agent finishes speaking)
-    def on_agent_speech_committed(event):
-        """Handle agent speech committed events - this is the correct event"""
+    # Listen for agent output transcription
+    def on_agent_output_transcribed(event):
+        """Handle agent transcription events"""
         if hasattr(event, 'transcript') and event.transcript:
             print("🤖 AGENT:", event.transcript)
         elif hasattr(event, 'text') and event.text:
             print("🤖 AGENT:", event.text)
         else:
-            print("🤖 AGENT Speech Committed Event:", event)
-            print("🤖 Event attributes:", [x for x in dir(event) if not x.startswith('_')])
-    
-    session.on("agent_speech_committed", on_agent_speech_committed)
-    
-    # Also try alternative event names
-    def on_agent_output_transcribed(event):
-        """Alternative handler for agent transcription"""
-        if hasattr(event, 'transcript') and event.transcript:
-            print("🤖 AGENT (output_transcribed):", event.transcript)
-        else:
-            print("🤖 Agent Output Transcribed Event:", event)
+            print("🤖 AGENT Transcript Event:", event)
     
     session.on("agent_output_transcribed", on_agent_output_transcribed)
     
-    # Listen for conversation items being added (includes agent responses)
-    def on_conversation_item_added(event):
-        """Handle conversation items - includes agent responses"""
-        if hasattr(event, 'item'):
-            item = event.item
-            # Check if it's an agent/assistant item
-            if hasattr(item, 'role') and item.role in ['assistant', 'agent']:
-                if hasattr(item, 'content') and item.content:
-                    print("🤖 AGENT (conversation):", item.content)
-                elif hasattr(item, 'text') and item.text:
-                    print("🤖 AGENT (conversation):", item.text)
-            else:
-                print("📝 Conversation Item:", item)
+    # Also try alternative event names
+    def on_assistant_transcribed(event):
+        """Alternative handler for assistant transcription"""
+        if hasattr(event, 'transcript') and event.transcript:
+            print("🤖 AGENT (assistant_transcribed):", event.transcript)
+        else:
+            print("🤖 Assistant Transcribed Event:", event)
     
-    session.on("conversation_item_added", on_conversation_item_added)
+    session.on("assistant_transcribed", on_assistant_transcribed)
     
     # Listen to room transcript events and filter by participant
     def on_room_transcript(event):
         """Handle room-level transcript events - filter for agent"""
-        print("📝 ROOM TRANSCRIPT EVENT RECEIVED")
         # Check if this is from the agent participant
         if hasattr(event, 'participant') and event.participant:
             participant = event.participant
-            if hasattr(participant, 'identity'):
-                identity = participant.identity.lower()
-                if 'agent' in identity:
-                    if hasattr(event, 'text') and event.text:
-                        print("🤖 AGENT (room):", event.text)
-                    elif hasattr(event, 'transcript') and event.transcript:
-                        print("🤖 AGENT (room):", event.transcript)
+            if hasattr(participant, 'identity') and 'agent' in participant.identity.lower():
+                if hasattr(event, 'text') and event.text:
+                    print("🤖 AGENT (room):", event.text)
         elif hasattr(event, 'text') and event.text:
             # Print all room transcripts for debugging
             print("📝 ROOM TRANSCRIPT:", event.text)
-        else:
-            print("📝 Room Transcript Event:", event)
     
     ctx.room.on("transcript_received", on_room_transcript)
 
-    ##############PRINT AGENT RESPONSE (What agent says) ##########################
-    # With Realtime API, the agent's speech is generated from LLM output
-    # This is what the agent actually says
+    ##############PRINT TTS TEXT (LLM reply) ##########################
     def on_assistant_response(event):
-        """Handle assistant response - this is what the agent says"""
+        """Handle assistant response text (what LLM generates)"""
         if hasattr(event, 'type') and event.type == "output_text":
-            print("🤖 AGENT:", event.text)
+            print("🗣️ LLM Output:", event.text)
         elif hasattr(event, 'text') and event.text:
-            print("🤖 AGENT:", event.text)
+            print("🗣️ LLM Output:", event.text)
         elif hasattr(event, 'content') and event.content:
-            print("🤖 AGENT:", event.content)
+            print("🗣️ LLM Output:", event.content)
 
     session.on("assistant_response", on_assistant_response)
 

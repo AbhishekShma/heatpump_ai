@@ -148,7 +148,8 @@ async def my_agent(ctx: agents.JobContext):
     )
 
     await session.generate_reply(
-        instructions=f"Greet the user and begin the assessment as per {AGENT_INSTRUCTIONS}."
+        # instructions=f"Greet the user and begin the assessment as per {AGENT_INSTRUCTIONS}."
+        instructions=f"Convert what I say in hindi into english."
     )
 
 

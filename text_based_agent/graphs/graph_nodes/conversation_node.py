@@ -4,7 +4,11 @@ from langchain_core.messages import AIMessage, SystemMessage
 
 from graphs.schemas.state_schema import State
 from components.llm import llm
-from components.prompts.conversation_prompt import AGENT_INSTRUCTIONS_TEMPLATE, QUESTIONS_SECTION_TEMPLATE
+from components.prompts.conversation_prompt import (
+    AGENT_INSTRUCTIONS_WITH_QUESTIONS,
+    AGENT_INSTRUCTIONS_WITHOUT_QUESTIONS,
+    QUESTIONS_SECTION_TEMPLATE
+)
 
 
 def conversation_node(state: State) -> dict:
@@ -20,12 +24,17 @@ def conversation_node(state: State) -> dict:
     if not state.messages:
         return {}
     
-    # Format instructions with questions if provided
+    # Skip if last message is already an AI message (greeting was just added)
+    # Only process if there's a user message waiting for a response
+    if isinstance(state.messages[-1], AIMessage):
+        return {}
+    
+    # Format instructions based on whether questions are provided
     if state.questions:
         questions_section = QUESTIONS_SECTION_TEMPLATE.format(questions=state.questions)
-        instructions = AGENT_INSTRUCTIONS_TEMPLATE.format(questions_section=questions_section)
+        instructions = AGENT_INSTRUCTIONS_WITH_QUESTIONS.format(questions_section=questions_section)
     else:
-        instructions = AGENT_INSTRUCTIONS_TEMPLATE.format(questions_section="")
+        instructions = AGENT_INSTRUCTIONS_WITHOUT_QUESTIONS
     
     # Create system message with agent instructions
     system_message = SystemMessage(content=instructions)

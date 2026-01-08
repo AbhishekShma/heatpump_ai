@@ -12,44 +12,86 @@ def main():
 3. What is the approximate heated floor area in square meters?
 4. What heating system do you currently use?"""
     
-    # Example 1: User starts with general conversation, agent redirects to questions
-    print("=== Example 1: User Starts with General Conversation (Agent Redirects) ===")
-    initial_state = State(
-        messages=[HumanMessage(content="Hello! How are you?, can you tell me about polar bears?")],
-        questions=questions_str
-    )
-    result = main_graph.invoke(initial_state)
-    print(f"AI Response: {result['messages'][-1].content}\n")
+    print("=== Example: Full Conversation Starting with No History ===")
     
-    # Example 2: Empty messages with questions (first message node will initiate)
-    print("=== Example 2: Empty Messages with Questions (First Question Initiated) ===")
+    # Start with no history - empty messages list
+    messages = []
     
-    # Start with empty messages - greeting node will generate initial explanation
-    state_empty_messages = State(
-        messages=[],
-        questions=questions_str
-    )
+    # Step 1: AI provides welcome message (no user message yet)
+    print("\n--- Turn 1: AI Welcome Message ---")
+    state1 = State(messages=messages, questions=questions_str)
+    result1 = main_graph.invoke(state1)
+    messages = result1['messages']  # Update with AI welcome message
+    print(f"AI: {messages[-1].content}\n")
     
-    result_empty = main_graph.invoke(state_empty_messages)
-    print(f"AI Response (Greeting): {result_empty['messages'][-1].content}\n")
+    # Step 2: User answers first question
+    print("--- Turn 2: Answer to Question 1 ---")
+    user_msg_2 = HumanMessage(content="My house is detached")
+    print(f"User: {user_msg_2.content}")
+    messages.append(user_msg_2)
+    state2 = State(messages=messages, questions=questions_str)
+    result2 = main_graph.invoke(state2)
+    messages = result2['messages']  # Update with AI response
+    print(f"AI: {messages[-1].content}\n")
     
-    # Example 3: With questions to ask one by one (user initiated)
-    print("=== Example 3: With Questions (User Initiated) ===")
-    state_with_questions = State(
-        messages=[HumanMessage(content="I'd like to assess my heat pump suitability")],
-        questions=questions_str
-    )
+    # Step 3: User goes off-topic
+    print("--- Turn 3: Off-topic message ---")
+    user_msg_3 = HumanMessage(content="By the way, what's the weather like today?")
+    print(f"User: {user_msg_3.content}")
+    messages.append(user_msg_3)
+    state3 = State(messages=messages, questions=questions_str)
+    result3 = main_graph.invoke(state3)
+    messages = result3['messages']  # Update with AI response
+    print(f"AI: {messages[-1].content}\n")
     
-    result2 = main_graph.invoke(state_with_questions)
-    print(f"AI Response: {result2['messages'][-1].content}\n")
+    # Step 4: User answers second question
+    print("--- Turn 4: Answer to Question 2 ---")
+    user_msg_4 = HumanMessage(content="It was built in 1995")
+    print(f"User: {user_msg_4.content}")
+    messages.append(user_msg_4)
+    state4 = State(messages=messages, questions=questions_str)
+    result4 = main_graph.invoke(state4)
+    messages = result4['messages']  # Update with AI response
+    print(f"AI: {messages[-1].content}\n")
     
-    # Continue conversation - questions are maintained in state
-    next_state = State(
-        messages=result2['messages'] + [HumanMessage(content="My house is detached")],
-        questions=questions_str  # Questions persist across turns
-    )
-    result3 = main_graph.invoke(next_state)
-    print(f"AI Response: {result3['messages'][-1].content}")
+    # Step 5: User answers third question
+    print("--- Turn 5: Answer to Question 3 ---")
+    user_msg_5 = HumanMessage(content="About 120 square meters")
+    print(f"User: {user_msg_5.content}")
+    messages.append(user_msg_5)
+    state5 = State(messages=messages, questions=questions_str)
+    result5 = main_graph.invoke(state5)
+    messages = result5['messages']  # Update with AI response
+    print(f"AI: {messages[-1].content}\n")
+    
+    # Step 6: User goes off-topic again
+    print("--- Turn 6: Another off-topic message ---")
+    user_msg_6 = HumanMessage(content="Do you know any good restaurants nearby?")
+    print(f"User: {user_msg_6.content}")
+    messages.append(user_msg_6)
+    state6 = State(messages=messages, questions=questions_str)
+    result6 = main_graph.invoke(state6)
+    messages = result6['messages']  # Update with AI response
+    print(f"AI: {messages[-1].content}\n")
+    
+    # Step 7: User answers fourth question (all questions answered)
+    print("--- Turn 7: Answer to Question 4 (All Questions Answered) ---")
+    user_msg_7 = HumanMessage(content="I currently use a gas boiler")
+    messages.append(user_msg_7)
+    print(f"User: {user_msg_7.content}")
+    state7 = State(messages=messages, questions=questions_str)
+    result7 = main_graph.invoke(state7)
+    messages = result7['messages']  # Update with AI response and summary
+    # Print all AI messages (response and summary if present)
+    for msg in messages[len(state7.messages):]:
+        if not isinstance(msg, HumanMessage):
+            print(f"AI: {msg.content}\n")
+    
+    print("=== Full Conversation History ===")
+    print(f"Total messages: {len(messages)}\n")
+    for i, msg in enumerate(messages, 1):
+        msg_type = "User" if isinstance(msg, HumanMessage) else "AI"
+        print(f"{i}. {msg_type}: {msg.content}\n")
 
 
 if __name__ == "__main__":

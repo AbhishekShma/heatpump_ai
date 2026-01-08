@@ -1,6 +1,6 @@
 """Conversation node for the text-based agent."""
 
-from langchain_core.messages import AIMessage, SystemMessage
+from langchain_core.messages import AIMessage, SystemMessage, HumanMessage
 
 from graphs.schemas.state_schema import State
 from components.llm import llm
@@ -9,6 +9,7 @@ from components.prompts.conversation_prompt import (
     AGENT_INSTRUCTIONS_WITHOUT_QUESTIONS,
     QUESTIONS_SECTION_TEMPLATE
 )
+from components.prompts.summary_prompt import SUMMARY_PROMPT_TEMPLATE
 
 
 def conversation_node(state: State) -> dict:
@@ -49,6 +50,17 @@ def conversation_node(state: State) -> dict:
     # Add AI response to messages
     ai_message = AIMessage(content=result.content)
     updated_messages = state.messages + [ai_message]
+    
+    # Check if all questions are answered and generate summary using LLM
+    if state.questions:
+        summary_prompt = SUMMARY_PROMPT_TEMPLATE.format(questions=state.questions)
+        summary_messages = [system_message] + updated_messages + [HumanMessage(content=summary_prompt)]
+        summary_result = llm.invoke(summary_messages)
+        
+        # Only add summary if LLM generated content (empty means not all questions answered)
+        if summary_result.content and summary_result.content.strip():
+            summary_message = AIMessage(content=f"\n\n{summary_result.content}")
+            updated_messages = updated_messages + [summary_message]
     
     return {"messages": updated_messages}
 

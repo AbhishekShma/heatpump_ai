@@ -59,7 +59,7 @@ def conversation_node(state: State) -> dict:
         
         # Only add summary if LLM generated content (empty means not all questions answered)
         if summary_result.content and summary_result.content.strip():
-            summary_message = AIMessage(content=f"\n\n{summary_result.content}")
+            summary_message = AIMessage(content=summary_result.content)
             updated_messages = updated_messages + [summary_message]
     
     return {"messages": updated_messages}

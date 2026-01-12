@@ -1,0 +1,89 @@
+{
+  "example_minimal": {
+    "description": "Minimal required fields only",
+    "data": {
+      "area": 100.0,
+      "N_f": 2,
+      "year": 1995,
+      "postal_code": 81248
+    }
+  },
+  
+  "example_complete": {
+    "description": "Complete example with all optional fields",
+    "data": {
+      "area": 100.0,
+      "N_f": 2,
+      "year": 1995,
+      "postal_code": 81248,
+      "n_walls_touching": 2,
+      "u_values": {
+        "floor": 0.3,
+        "wall": 0.4,
+        "roof": 0.25,
+        "window": 1.2
+      },
+      "h": 2.5,
+      "f_floor": 1.0,
+      "f_wall": 1.0,
+      "f_roof": 1.0,
+      "f_window": 1.0,
+      "f_wall_touching": 0.5,
+      "t_indoor": 21.0,
+      "is_ground_floor": true,
+      "is_top_floor": true
+    }
+  },
+  
+  "example_alternative_u_values": {
+    "description": "Example using direct U-value keys instead of nested object",
+    "data": {
+      "area": 100.0,
+      "N_f": 2,
+      "year": 1995,
+      "postal_code": 81248,
+      "n_walls_touching": 2,
+      "U_floor": 0.3,
+      "U_wall": 0.4,
+      "U_roof": 0.25,
+      "U_window": 1.2
+    }
+  },
+  
+  "example_alternative_postcode": {
+    "description": "Example using 'postcode' instead of 'postal_code'",
+    "data": {
+      "area": 100.0,
+      "N_f": 2,
+      "year": 1995,
+      "postcode": 81248,
+      "n_walls_touching": 0
+    }
+  },
+  
+  "field_descriptions": {
+    "required": {
+      "area": "Heated floor area per floor in square meters (m²). Must be positive.",
+      "N_f": "Number of floors. Must be a positive integer.",
+      "year": "Construction year. Determines air change rate: >=1995: 0.25, 1977-1994: 0.5, <1977: 1.0",
+      "postal_code": "Postal code for design temperature lookup. Can also use 'postcode'."
+    },
+    "optional": {
+      "n_walls_touching": "Number of walls touching other buildings (total across all floors). Default: 0",
+      "u_values": "U-values object with keys: floor, wall, roof, window. Defaults: 0.3, 0.4, 0.25, 1.2",
+      "U_floor": "Alternative: Direct U-value for floor. Default: 0.3",
+      "U_wall": "Alternative: Direct U-value for wall. Default: 0.4",
+      "U_roof": "Alternative: Direct U-value for roof. Default: 0.25",
+      "U_window": "Alternative: Direct U-value for window. Default: 1.2",
+      "h": "Height of each floor in meters (m). Default: 2.5",
+      "f_floor": "Correction factor for floor. Default: 1.0",
+      "f_wall": "Correction factor for wall exposed to air. Default: 1.0",
+      "f_roof": "Correction factor for roof. Default: 1.0",
+      "f_window": "Correction factor for window. Default: 1.0",
+      "f_wall_touching": "Correction factor for walls touching other buildings. Default: 0.5",
+      "t_indoor": "Indoor design temperature in Celsius (°C). Default: 21.0",
+      "is_ground_floor": "Whether building has ground floor. Default: true",
+      "is_top_floor": "Whether building has top floor. Default: true"
+    }
+  }
+}

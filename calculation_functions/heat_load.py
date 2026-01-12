@@ -20,7 +20,7 @@ def calculate_heat_load(
     U_roof: float,
     U_window: float,
     t_indoor: float = 21,
-    h: float = 0.5,
+    h: float = 2.5,
     f_floor: float = 1.0,
     f_wall: float = 1.0,
     f_roof: float = 1.0,
@@ -58,7 +58,7 @@ def calculate_heat_load(
         n_walls_touching: Number of walls touching other buildings/structures 
                           (total across all floors, default: 0)
         f_wall_touching: Correction factor for walls touching other buildings 
-                         (default: 1.0)
+                         (default: 0.5)
     
     Returns:
         Dictionary containing:

@@ -5,7 +5,7 @@ This module contains helper functions to extract and calculate
 various parameters needed for heat load calculations from JSON data.
 """
 
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
@@ -14,10 +14,11 @@ def get_air_change_rate(json_data: Dict[str, Any]) -> float:
     """
     Get air change rate (n) based on building construction year from JSON.
     
-    The air change rate can take three values depending on the year:
-    - Old buildings (before some year): higher value
-    - Medium buildings: medium value
-    - New buildings (after some year): lower value
+    The air exchange rates for calculating building heating load differ based on
+    the building's construction year:
+    - From 1995 onwards: 0.25 (halving ventilation heat losses)
+    - 1977 to 1994: 0.5 (same losses as in room-by-room calculation)
+    - Before 1977: 1.0 (doubling ventilation heat losses)
     
     Args:
         json_data: Dictionary containing building parameters from JSON.
@@ -28,134 +29,339 @@ def get_air_change_rate(json_data: Dict[str, Any]) -> float:
     
     Raises:
         ValueError: If 'year' is missing from JSON data
-    
-    Note:
-        This is a dummy function. Actual implementation should be
-        based on building codes and standards for the specific region.
     """
     # Extract year from JSON
     year = json_data.get('year')
     if year is None:
         raise ValueError("Missing required parameter 'year' in JSON data for air change rate calculation")
     
-    # Dummy implementation - returns one of three values based on year
-    # TODO: Implement actual logic based on building codes
-    if year < 1980:
-        return 1.5  # Old buildings - higher air change rate
-    elif year < 2000:
-        return 1.0  # Medium buildings
+    # Determine air change rate based on construction year
+    if year >= 1995:
+        return 0.25  # From 1995 onwards - halving ventilation heat losses
+    elif year >= 1977:
+        return 0.5  # 1977 to 1994 - same losses as room-by-room calculation
     else:
-        return 0.5  # New buildings - lower air change rate
+        return 1.0  # Before 1977 - doubling ventilation heat losses
 
 
 def get_n_walls_touching(json_data: Dict[str, Any]) -> int:
     """
-    Get number of walls touching other buildings/structures.
+    Get number of walls touching other buildings/structures from JSON.
+    
+    Extracts the 'n_walls_touching' value from the JSON data. Returns 0 if
+    the key is missing or the value is None.
     
     Args:
-        json_data: Dictionary containing building parameters from JSON
+        json_data: Dictionary containing building parameters from JSON.
+                   Should contain 'n_walls_touching' key.
     
     Returns:
-        Number of walls touching other buildings (total across all floors)
-    
-    Note:
-        This is a dummy function. Actual implementation should extract
-        the value from the appropriate JSON key (e.g., 'walls_touching',
-        'adjacent_buildings', etc.)
+        Number of walls touching other buildings (total across all floors).
+        Returns 0 if the key is missing or value is None.
     """
-    # Dummy implementation
-    # TODO: Extract from JSON key like 'n_walls_touching' or 'walls_touching'
-    # For now, return 0 as default
     return json_data.get('n_walls_touching', 0)
 
 
-def get_u_values(json_data: Dict[str, Any]) -> Dict[str, float]:
+def _get_u_value_from_db(
+    database_url: str,
+    element_type: str,
+    data_type: str,
+    year: Optional[int],
+    insulation: Optional[str] = None,
+    country: str = 'DE'
+) -> Optional[float]:
     """
-    Get U-values for floor, wall, roof, and window from JSON data.
+    Get U-value from database for a specific element type.
     
     Args:
-        json_data: Dictionary containing building parameters from JSON
+        database_url: PostgreSQL database connection URL
+        element_type: Element type ('Wall', 'Roof', 'Floor', 'Window')
+        data_type: Data type ('ReEx' for renovated, 'SyAv' for non-renovated)
+        year: Construction year or replacement year. If None, year filter is ignored.
+        insulation: Insulation status ('yes' or 'no'), None to ignore filter
+        country: Country code, default 'DE'
+    
+    Returns:
+        U-value (W/(m²·K)) or None if not found
+    
+    Raises:
+        psycopg2.Error: If database connection or query fails
+    """
+    try:
+        conn = psycopg2.connect(database_url)
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
+        
+        # Build query - use quoted column names to handle case sensitivity
+        query = """
+        SELECT "U"
+        FROM u_value_table_with_insulation
+        WHERE "Code_ElementType" = %s
+          AND "Code_DataType_Construction" = %s
+          AND "Code_Country" = %s
+        """
+        params = [element_type, data_type, country]
+        
+        # Add year range filter only if year is provided
+        if year is not None:
+            query += ' AND "Year1_Construction"::integer <= %s AND "Year2_Construction"::integer >= %s'
+            params.extend([year, year])
+        
+        # Add insulation filter if provided
+        if insulation is not None:
+            query += ' AND "Insulation" = %s'
+            params.append(insulation)
+        
+        # Order by U value descending to get highest, limit to 1
+        # Cast U to numeric for proper ordering
+        query += ' ORDER BY "U"::numeric DESC LIMIT 1'
+        
+        cursor.execute(query, params)
+        result = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        
+        if result is not None:
+            # RealDictCursor returns column names without quotes
+            # When we SELECT "U", the key in result dict is 'U'
+            u_value = result.get('U')
+            
+            # If not found, try lowercase (shouldn't happen but safe)
+            if u_value is None:
+                u_value = result.get('u')
+            
+            # If still not found, get first value (fallback)
+            if u_value is None and result:
+                u_value = list(result.values())[0]
+            
+            if u_value is not None:
+                # Convert to float (U is stored as text, so convert string to float)
+                return float(str(u_value))
+        return None
+        
+    except psycopg2.Error as e:
+        raise psycopg2.Error(f"Database error while fetching U-value: {e}")
+    except Exception as e:
+        # Catch any other errors (like KeyError for column access)
+        raise psycopg2.Error(f"Error accessing database result: {e}")
+
+
+def get_u_values(json_data: Dict[str, Any], database_url: Optional[str] = None) -> Dict[str, float]:
+    """
+    Get U-values for floor, wall, roof, and window from JSON data or database.
+    
+    If database_url is provided and renovation information is available,
+    U-values are extracted from the database based on renovation status,
+    insulation, and year. Otherwise, requires u_values to be provided in JSON.
+    
+    Args:
+        json_data: Dictionary containing building parameters from JSON.
+                  Expected keys:
+                  - 'year': Construction year (required for DB lookup)
+                  - 'renovated': Boolean indicating if house was renovated
+                  - 'renovations': Dict with keys 'windows', 'roof', 'walls', 'floor' (booleans)
+                  - 'window_replacement_year': Year windows were replaced (optional)
+                  - 'roof_insulated': Boolean indicating if roof is insulated
+                  - 'walls_insulated': Boolean indicating if walls are insulated
+                  - 'u_values': Dict with manual U-values (required if database_url is None or lookup fails)
+        database_url: PostgreSQL database connection URL (optional)
     
     Returns:
         Dictionary with keys: 'U_floor', 'U_wall', 'U_roof', 'U_window'
         Values are U-values in W/(m²·K)
     
-    Note:
-        This is a dummy function. Actual implementation should extract
-        U-values from the appropriate JSON keys or calculate them based
-        on building materials and construction details.
+    Raises:
+        ValueError: If required U-values are missing and cannot be retrieved from database
     """
-    # Dummy implementation
-    # TODO: Extract from JSON keys or calculate from material properties
-    # Expected JSON structure might be:
-    # {
-    #   'u_values': {
-    #     'floor': 0.3,
-    #     'wall': 0.4,
-    #     'roof': 0.25,
-    #     'window': 1.2
-    #   }
-    # }
-    
-    # Try to get from nested structure first
-    if 'u_values' in json_data and isinstance(json_data['u_values'], dict):
-        u_vals = json_data['u_values']
+    # Helper function to extract U-values from JSON
+    def _extract_u_values_from_json(json_data: Dict[str, Any]) -> Dict[str, float]:
+        """Extract U-values from JSON, raising error if missing."""
+        if 'u_values' in json_data and isinstance(json_data['u_values'], dict):
+            u_vals = json_data['u_values']
+            missing = []
+            if 'floor' not in u_vals:
+                missing.append('floor')
+            if 'wall' not in u_vals:
+                missing.append('wall')
+            if 'roof' not in u_vals:
+                missing.append('roof')
+            if 'window' not in u_vals:
+                missing.append('window')
+            
+            if missing:
+                raise ValueError(f"Missing required U-values in 'u_values': {', '.join(missing)}")
+            
+            return {
+                'U_floor': u_vals['floor'],
+                'U_wall': u_vals['wall'],
+                'U_roof': u_vals['roof'],
+                'U_window': u_vals['window']
+            }
+        
+        # Try direct keys
+        missing = []
+        u_floor = json_data.get('U_floor') or json_data.get('u_floor')
+        u_wall = json_data.get('U_wall') or json_data.get('u_wall')
+        u_roof = json_data.get('U_roof') or json_data.get('u_roof')
+        u_window = json_data.get('U_window') or json_data.get('u_window')
+        
+        if u_floor is None:
+            missing.append('U_floor')
+        if u_wall is None:
+            missing.append('U_wall')
+        if u_roof is None:
+            missing.append('U_roof')
+        if u_window is None:
+            missing.append('U_window')
+        
+        if missing:
+            raise ValueError(f"Missing required U-values: {', '.join(missing)}")
+        
         return {
-            'U_floor': u_vals.get('floor', 0.3),
-            'U_wall': u_vals.get('wall', 0.4),
-            'U_roof': u_vals.get('roof', 0.25),
-            'U_window': u_vals.get('window', 1.2)
+            'U_floor': u_floor,
+            'U_wall': u_wall,
+            'U_roof': u_roof,
+            'U_window': u_window
         }
     
-    # Fallback to direct keys or defaults
-    return {
-        'U_floor': json_data.get('U_floor', json_data.get('u_floor', 0.3)),
-        'U_wall': json_data.get('U_wall', json_data.get('u_wall', 0.4)),
-        'U_roof': json_data.get('U_roof', json_data.get('u_roof', 0.25)),
-        'U_window': json_data.get('U_window', json_data.get('u_window', 1.2))
-    }
+    # If database_url not provided, require JSON values
+    if database_url is None:
+        return _extract_u_values_from_json(json_data)
+    
+    # Extract year and renovation info
+    year = json_data.get('year')
+    if year is None:
+        # If year missing, require JSON values
+        return _extract_u_values_from_json(json_data)
+    
+    renovated = json_data.get('renovated', False)
+    renovations = json_data.get('renovations', {})
+    
+    u_values = {}
+    
+    # Get window U-value
+    window_renovated = renovations.get('windows', False) if renovated else False
+    window_year = json_data.get('window_replacement_year', year)
+    window_data_type = 'ReEx' if window_renovated else 'SyAv'
+    window_u = _get_u_value_from_db(database_url, 'Window', window_data_type, window_year)
+    if window_u is None:
+        # Fallback to SyAv with highest U-value
+        window_u = _get_u_value_from_db(database_url, 'Window', 'SyAv', window_year)
+    if window_u is None:
+        # If still None, try to get from JSON
+        u_vals = json_data.get('u_values', {})
+        if isinstance(u_vals, dict) and 'window' in u_vals:
+            window_u = u_vals['window']
+        else:
+            window_u = json_data.get('U_window') or json_data.get('u_window')
+        if window_u is None:
+            raise ValueError(f"Could not retrieve U-value for window from database or JSON")
+    u_values['U_window'] = window_u
+    
+    # Get roof U-value
+    roof_renovated = renovations.get('roof', False) if renovated else False
+    roof_insulated = json_data.get('roof_insulated', False)
+    roof_data_type = 'ReEx' if roof_renovated else 'SyAv'
+    
+    if roof_renovated and roof_insulated:
+        # Case 1: Renovated + Insulated = yes → Use Insulation='yes', ignore year (14cm insulation)
+        roof_u = _get_u_value_from_db(database_url, 'Roof', 'ReEx', None, 'yes')
+    elif roof_renovated and not roof_insulated:
+        # Case 2: Renovated + Insulated = no → Use highest U-value with Insulation='no'
+        roof_u = _get_u_value_from_db(database_url, 'Roof', 'ReEx', year, 'no')
+    else:
+        # Case 3: Not renovated → Use highest U-value (SyAv, no insulation filter)
+        roof_u = _get_u_value_from_db(database_url, 'Roof', 'SyAv', year)
+    
+    if roof_u is None:
+        # Fallback to SyAv with highest U-value
+        roof_u = _get_u_value_from_db(database_url, 'Roof', 'SyAv', year)
+    if roof_u is None:
+        # If still None, try to get from JSON
+        u_vals = json_data.get('u_values', {})
+        if isinstance(u_vals, dict) and 'roof' in u_vals:
+            roof_u = u_vals['roof']
+        else:
+            roof_u = json_data.get('U_roof') or json_data.get('u_roof')
+        if roof_u is None:
+            raise ValueError(f"Could not retrieve U-value for roof from database or JSON")
+    u_values['U_roof'] = roof_u
+    
+    # Get wall U-value
+    wall_renovated = renovations.get('walls', False) if renovated else False
+    wall_insulated = json_data.get('walls_insulated', False)
+    wall_data_type = 'ReEx' if wall_renovated else 'SyAv'
+    
+    if wall_renovated and wall_insulated:
+        # Case 1: Renovated + Insulated = yes → Use Insulation='yes', ignore year (12cm insulation)
+        wall_u = _get_u_value_from_db(database_url, 'Wall', 'ReEx', None, 'yes')
+    elif wall_renovated and not wall_insulated:
+        # Case 2: Renovated + Insulated = no → Use highest U-value with Insulation='no'
+        wall_u = _get_u_value_from_db(database_url, 'Wall', 'ReEx', year, 'no')
+    else:
+        # Case 3: Not renovated → Use highest U-value (SyAv, no insulation filter)
+        wall_u = _get_u_value_from_db(database_url, 'Wall', 'SyAv', year)
+    
+    if wall_u is None:
+        # Fallback to SyAv with highest U-value
+        wall_u = _get_u_value_from_db(database_url, 'Wall', 'SyAv', year)
+    if wall_u is None:
+        # If still None, try to get from JSON
+        u_vals = json_data.get('u_values', {})
+        if isinstance(u_vals, dict) and 'wall' in u_vals:
+            wall_u = u_vals['wall']
+        else:
+            wall_u = json_data.get('U_wall') or json_data.get('u_wall')
+        if wall_u is None:
+            raise ValueError(f"Could not retrieve U-value for wall from database or JSON")
+    u_values['U_wall'] = wall_u
+    
+    # Get floor U-value
+    floor_renovated = renovations.get('floor', False) if renovated else False
+    floor_data_type = 'ReEx' if floor_renovated else 'SyAv'
+    # No insulation filter for floors
+    floor_u = _get_u_value_from_db(database_url, 'Floor', floor_data_type, year)
+    if floor_u is None:
+        # Fallback to SyAv with highest U-value
+        floor_u = _get_u_value_from_db(database_url, 'Floor', 'SyAv', year)
+    if floor_u is None:
+        # If still None, try to get from JSON
+        u_vals = json_data.get('u_values', {})
+        if isinstance(u_vals, dict) and 'floor' in u_vals:
+            floor_u = u_vals['floor']
+        else:
+            floor_u = json_data.get('U_floor') or json_data.get('u_floor')
+        if floor_u is None:
+            raise ValueError(f"Could not retrieve U-value for floor from database or JSON")
+    u_values['U_floor'] = floor_u
+    
+    return u_values
 
 
 def get_t_design(json_data: Dict[str, Any], database_url: str) -> float:
     """
-    Get design temperature (t_design) from database based on location in JSON.
+    Get design temperature (t_design) from database based on postal code.
     
-    Queries the PostgreSQL database to retrieve the design temperature
-    based on location coordinates (latitude/longitude) or location identifier
-    from the JSON data.
+    Queries the PostgreSQL database 'climate_info' table to retrieve the design
+    temperature based on postal code from the JSON data.
     
     Args:
         json_data: Dictionary containing building parameters from JSON.
-                   Should contain location information such as:
-                   - 'latitude' and 'longitude' (for coordinate-based lookup)
-                   - OR 'location_id' (for ID-based lookup)
-                   - OR 'postal_code' (for postal code-based lookup)
+                   Must contain 'postal_code' or 'postcode' key.
         database_url: PostgreSQL database connection URL
     
     Returns:
         Design temperature t_design (°C)
     
     Raises:
-        ValueError: If required location information is missing from JSON
+        ValueError: If postal_code is missing from JSON data or not found in database
         psycopg2.Error: If database connection or query fails
-    
-    Note:
-        This function queries the database. The exact table name and column
-        names should be adjusted based on the actual database schema.
-        Expected table might be 'design_temperatures' or 'climate_data'
-        with columns like 'latitude', 'longitude', 't_design'.
     """
-    # Extract location information from JSON
-    # Try multiple possible keys for location
-    latitude = json_data.get('latitude') or json_data.get('lat')
-    longitude = json_data.get('longitude') or json_data.get('lon') or json_data.get('lng')
-    location_id = json_data.get('location_id')
+    # Extract postal code from JSON
     postal_code = json_data.get('postal_code') or json_data.get('postcode')
     
-    if not any([latitude and longitude, location_id, postal_code]):
+    if not postal_code:
         raise ValueError(
-            "Missing required location information in JSON data. "
-            "Need one of: ('latitude' and 'longitude'), 'location_id', or 'postal_code'"
+            "Missing required parameter 'postal_code' in JSON data for design temperature lookup"
         )
     
     # Connect to database and query
@@ -163,37 +369,14 @@ def get_t_design(json_data: Dict[str, Any], database_url: str) -> float:
         conn = psycopg2.connect(database_url)
         cursor = conn.cursor(cursor_factory=RealDictCursor)
         
-        # Build query based on available location data
-        if location_id:
-            query = """
-                SELECT t_design 
-                FROM design_temperatures 
-                WHERE location_id = %s
-                LIMIT 1
-            """
-            cursor.execute(query, (location_id,))
-        elif postal_code:
-            query = """
-                SELECT t_design 
-                FROM design_temperatures 
-                WHERE postal_code = %s
-                LIMIT 1
-            """
-            cursor.execute(query, (postal_code,))
-        elif latitude and longitude:
-            # Query based on coordinates (might need distance calculation)
-            # For now, using exact match - might need to use ST_DWithin for spatial queries
-            query = """
-                SELECT t_design 
-                FROM design_temperatures 
-                WHERE ABS(latitude - %s) < 0.01 
-                  AND ABS(longitude - %s) < 0.01
-                ORDER BY ABS(latitude - %s) + ABS(longitude - %s)
-                LIMIT 1
-            """
-            cursor.execute(query, (latitude, longitude, latitude, longitude))
-        else:
-            raise ValueError("Unable to determine location from JSON data")
+        # Query climate_info table using postal_code
+        query = """
+        SELECT design_temperature 
+        FROM climate_info 
+            WHERE postal_code = %s
+            LIMIT 1
+        """
+        cursor.execute(query, (postal_code,))
         
         result = cursor.fetchone()
         cursor.close()
@@ -201,11 +384,10 @@ def get_t_design(json_data: Dict[str, Any], database_url: str) -> float:
         
         if result is None:
             raise ValueError(
-                f"No design temperature found in database for the provided location. "
-                f"Location: lat={latitude}, lon={longitude}, id={location_id}, postal={postal_code}"
+                f"No design temperature found in database for postal code: {postal_code}"
             )
         
-        return float(result['t_design'])
+        return float(result['design_temperature'])
         
     except psycopg2.Error as e:
         raise psycopg2.Error(f"Database error while fetching design temperature: {e}")

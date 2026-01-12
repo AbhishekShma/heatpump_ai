@@ -12,7 +12,7 @@ from livekit import agents, rtc
 from livekit.agents import AgentServer, AgentSession, Agent, room_io
 from livekit.plugins import noise_cancellation, openai
 
-from tools import get_current_time
+from tools import get_current_time, json_extraction_tool
 from prompts import AGENT_INSTRUCTIONS
 
 # Load environment variables from root-level .env file
@@ -26,7 +26,7 @@ class Assistant(Agent):
     def __init__(self) -> None:
         super().__init__(
             instructions=AGENT_INSTRUCTIONS,
-            tools=[get_current_time],
+            tools=[get_current_time, json_extraction_tool],
         )
 
 

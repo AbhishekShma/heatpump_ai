@@ -10,6 +10,7 @@ from components.prompts.conversation_prompt import (
     QUESTIONS_SECTION_TEMPLATE
 )
 from components.prompts.summary_prompt import SUMMARY_PROMPT_TEMPLATE
+from graphs.graph_nodes.tool_handler import handle_tool_calls, get_tools
 
 
 def conversation_node(state: State) -> dict:
@@ -40,16 +41,22 @@ def conversation_node(state: State) -> dict:
     # Create system message with agent instructions
     system_message = SystemMessage(content=instructions)
     
+    # Bind tools to LLM - enable JSON extraction tool
+    tools = get_tools()
+    llm_with_tools = llm.bind_tools(tools)
+    
     # Combine system message with full conversation history
     # The messages list already contains the full history (HumanMessage, AIMessage, etc.)
     messages_with_system = [system_message] + state.messages
     
-    # Invoke LLM with the full conversation history including system instructions
-    result = llm.invoke(messages_with_system)
+    # Invoke LLM with tools enabled
+    result = llm_with_tools.invoke(messages_with_system)
     
-    # Add AI response to messages
-    ai_message = AIMessage(content=result.content)
-    updated_messages = state.messages + [ai_message]
+    # Add AI response to messages (result is already an AIMessage with tool_calls if any)
+    updated_messages = state.messages + [result]
+    
+    # Handle tool calls if any
+    updated_messages = handle_tool_calls(result, updated_messages, system_message, llm_with_tools)
     
     # Check if all questions are answered and generate summary using LLM
     if state.questions:

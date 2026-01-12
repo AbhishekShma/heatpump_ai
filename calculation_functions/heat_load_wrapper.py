@@ -9,8 +9,8 @@ import json
 from pathlib import Path
 from typing import Dict, Any, Union
 
-from .heat_load import calculate_heat_load
-from .heat_load_utils import (
+from heat_load import calculate_heat_load
+from heat_load_utils import (
     get_air_change_rate,
     get_n_walls_touching,
     get_u_values,
@@ -66,20 +66,36 @@ def calculate_heat_load_from_json(
     
     Expected JSON structure:
         {
-            "area": 100.0,           # Heated floor area per floor (m²)
-            "N_f": 2,                # Number of floors
-            "year": 1995,            # Construction year (for air change rate)
-            "latitude": 52.52,       # Latitude for design temperature lookup
-            "longitude": 13.405,     # Longitude for design temperature lookup
-            # OR "location_id": "12345",  # Location ID for design temperature lookup
-            # OR "postal_code": "10115",   # Postal code for design temperature lookup
-            "n_walls_touching": 2,   # Number of walls touching (optional)
-            "u_values": {            # U-values (optional, can be direct keys)
+            "area": 100.0,           # Heated floor area per floor (m²) - REQUIRED
+            "N_f": 2,                # Number of floors - REQUIRED
+            "year": 1995,            # Construction year (for air change rate) - REQUIRED
+            "postal_code": 10115,    # Postal code for design temperature lookup - REQUIRED
+            "n_walls_touching": 2,   # Number of walls touching (optional, defaults to 0)
+            "renovated": true,       # Whether house was renovated (optional, for U-value lookup)
+            "renovations": {         # Which elements were renovated (optional)
+                "windows": true,
+                "roof": true,
+                "walls": false,
+                "floor": false
+            },
+            "window_replacement_year": 2015,  # Year windows were replaced (optional)
+            "roof_insulated": true,  # Whether roof is insulated (optional)
+            "walls_insulated": false, # Whether walls are insulated (optional)
+            "u_values": {            # U-values (optional, fallback if DB lookup fails)
                 "floor": 0.3,
                 "wall": 0.4,
                 "roof": 0.25,
                 "window": 1.2
-            }
+            },
+            "h": 2.5,                # Height of each floor (m) - optional, default: 2.5
+            "f_floor": 1.0,          # Correction factor for floor - optional, default: 1.0
+            "f_wall": 1.0,           # Correction factor for wall exposed to air - optional, default: 1.0
+            "f_roof": 1.0,           # Correction factor for roof - optional, default: 1.0
+            "f_window": 1.0,         # Correction factor for window - optional, default: 1.0
+            "f_wall_touching": 0.5,  # Correction factor for walls touching - optional, default: 0.5
+            "t_indoor": 21.0,        # Indoor design temperature (°C) - optional, default: 21.0
+            "is_ground_floor": true, # Whether building has ground floor - optional, default: true
+            "is_top_floor": true     # Whether building has top floor - optional, default: true
         }
     """
     # Read JSON file
@@ -102,14 +118,25 @@ def calculate_heat_load_from_json(
     # Get air change rate from JSON (extracts year internally)
     n = get_air_change_rate(json_data)
     
-    # Get U-values from JSON
-    u_values = get_u_values(json_data)
+    # Get U-values from JSON or database
+    u_values = get_u_values(json_data, database_url)
     
     # Get number of walls touching
     n_walls_touching = get_n_walls_touching(json_data)
     
     # Get design temperature from database
     t_design = get_t_design(json_data, database_url)
+    
+    # Extract optional parameters from JSON, use function defaults if not present
+    h = json_data.get('h', h)
+    f_floor = json_data.get('f_floor', f_floor)
+    f_wall = json_data.get('f_wall', f_wall)
+    f_roof = json_data.get('f_roof', f_roof)
+    f_window = json_data.get('f_window', f_window)
+    f_wall_touching = json_data.get('f_wall_touching', f_wall_touching)
+    t_indoor = json_data.get('t_indoor', t_indoor)
+    is_ground_floor = json_data.get('is_ground_floor', is_ground_floor)
+    is_top_floor = json_data.get('is_top_floor', is_top_floor)
     
     # Call the core calculation function
     result = calculate_heat_load(

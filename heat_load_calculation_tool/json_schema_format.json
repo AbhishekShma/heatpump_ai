@@ -1,0 +1,26 @@
+{
+  "area": 0.0,
+  "N_f": 1,
+  "year": 2000,
+  "postal_code": 0,
+  "n_walls_touching": 0,
+  "renovated": false,
+  "renovations": {
+    "windows": false,
+    "roof": false,
+    "walls": false,
+    "floor": false
+  },
+  "window_replacement_year": null,
+  "roof_insulated": false,
+  "walls_insulated": false,
+  "h": 2.5,
+  "f_floor": 1.0,
+  "f_wall": 1.0,
+  "f_roof": 1.0,
+  "f_window": 1.0,
+  "f_wall_touching": 0.5,
+  "t_indoor": 21.0,
+  "is_ground_floor": true,
+  "is_top_floor": true
+}

@@ -6,7 +6,7 @@ Given a conversation summary about a building/house, extract the following infor
 
 {{
   "area": <float>,                    // Heated floor area per floor in square meters (m²)
-  "N_f": <integer>,                  // Number of floors
+  "N_f": <integer>,                  // Number of floors (default: 1)
   "year": <integer>,                 // Construction year of the building
   "postal_code": <integer>,          // Postal code for the building location
   "n_walls_touching": <integer>,     // Number of walls touching other buildings (default: 0)
@@ -42,6 +42,8 @@ CRITICAL REQUIREMENTS:
 5. Include window_replacement_year only if mentioned in the summary
 6. Return ONLY valid JSON matching the exact structure above, no additional text, markdown, or explanation
 7. Ensure all numeric values use appropriate types (integers for counts/years, floats for measurements/temperatures)
+8. is_top_floor and is_ground_floor are always true if not mentioned in the summary
+9. Height is always 2.5 meters if not mentioned in the summary.
 
 Conversation Summary:
 {summary}

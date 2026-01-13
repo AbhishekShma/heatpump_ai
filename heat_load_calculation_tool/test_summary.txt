@@ -1,0 +1,7 @@
+Sample Building Conversation Summary:
+
+The building is a two-story house located in Munich with postal code 81248. It was constructed in 1995. The heated floor area is 100 square meters per floor. The building has two walls that are touching adjacent buildings. 
+
+The house underwent renovations in 2015, specifically the windows were replaced that year. The roof was also renovated and insulated. However, the walls and floor were not renovated. The walls are not insulated.
+
+Each floor has a height of 2.5 meters. The indoor design temperature is set to 21 degrees Celsius. The building has both a ground floor and a top floor.

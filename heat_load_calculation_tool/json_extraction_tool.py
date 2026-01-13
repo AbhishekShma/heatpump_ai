@@ -8,7 +8,7 @@ from datetime import datetime
 from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_openai import ChatOpenAI
 
-from .prompts import JSON_EXTRACTION_PROMPT
+from prompts import JSON_EXTRACTION_PROMPT
 
 # Initialize LLM for JSON extraction
 llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)

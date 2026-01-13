@@ -18,6 +18,10 @@ def extract_and_store_json(summary: str, output_dir: str = "json_outputs") -> Di
     """
     Extract structured JSON from conversation summary and store it to a file.
     
+    Extracts building information matching the format in input_example.json:
+    - Required fields: area, N_f, year, postal_code
+    - Optional fields with defaults: n_walls_touching, renovated, renovations, etc.
+    
     Args:
         summary: Conversation summary text containing building information
         output_dir: Directory to store JSON files (default: "json_outputs")
@@ -38,7 +42,7 @@ def extract_and_store_json(summary: str, output_dir: str = "json_outputs") -> Di
         prompt = JSON_EXTRACTION_PROMPT.format(summary=summary)
         
         messages = [
-            SystemMessage(content="You are a helpful assistant that extracts structured data from text and returns only valid JSON."),
+            SystemMessage(content="You are a helpful assistant that extracts structured data from text and returns only valid JSON matching the exact format specified."),
             HumanMessage(content=prompt)
         ]
         
@@ -56,6 +60,31 @@ def extract_and_store_json(summary: str, output_dir: str = "json_outputs") -> Di
         
         # Parse JSON
         json_data = json.loads(json_str)
+        
+        # Validate required fields exist
+        required_fields = ["area", "N_f", "year", "postal_code"]
+        missing_fields = [field for field in required_fields if field not in json_data]
+        if missing_fields:
+            return {
+                "success": False,
+                "json_data": None,
+                "file_path": None,
+                "error": f"Missing required fields: {', '.join(missing_fields)}"
+            }
+        
+        # Ensure renovations object exists with all required keys
+        if "renovations" not in json_data:
+            json_data["renovations"] = {
+                "windows": False,
+                "roof": False,
+                "walls": False,
+                "floor": False
+            }
+        else:
+            # Ensure all renovation keys exist
+            for key in ["windows", "roof", "walls", "floor"]:
+                if key not in json_data["renovations"]:
+                    json_data["renovations"][key] = False
         
         # Generate filename with timestamp
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

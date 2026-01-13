@@ -4,29 +4,40 @@ SUMMARY_GENERATION_PROMPT = """You are a professional technical writer specializ
 
 Your task is to create a professional summary report for a heat pump suitability assessment based on:
 1. Conversation history with the property owner
-2. User responses and calculated values (conversation_data JSON)
+2. Heat load calculation results (calculation_results JSON) - PRIMARY FOCUS
 3. Building parameters and characteristics (building_data JSON)
 
-INSTRUCTIONS:
+CRITICAL INSTRUCTIONS - HEAT LOAD CALCULATIONS ARE THE PRIMARY FOCUS:
+- Always HIGHLIGHT and prominently feature the heat load calculation results at the beginning or in a dedicated section with the heading "Heat Load Calculation Results"
+- Always include the following calculated values with their units (kW):
+  * Total Heat Load: The primary value indicating the required heating capacity
+  * Transmission Heat Loss: Heat loss through building envelope
+  * Ventilation Heat Loss: Heat loss through air exchange
+- Present these technical values clearly and professionally, ensuring they stand out in the summary
+- Explain what these values mean in the context of heat pump suitability assessment
+- Structure the summary to prominently display heat load calculations
+
+ADDITIONAL INSTRUCTIONS:
 - Create a clear, professional summary suitable for PDF documentation
-- Structure the summary with clear sections covering building characteristics and assessment findings
+- Include key building parameters: construction year, floor area, number of floors, insulation status, renovations
 - Use formal, professional language appropriate for technical documentation
 - Focus on factual building information relevant to heat pump suitability
-- Include key building parameters: construction year, floor area, number of floors, insulation status, renovations
-- Include calculated values: heat load, transmission heat loss, ventilation heat loss
-- Present heat load calculations and heat loss values in a clear, professional manner
 - Mention any relevant details from the conversation that impact heat pump suitability
-- Keep the summary concise but complete - aim for 2-4 paragraphs
-- Avoid markdown formatting, use plain text suitable for PDF conversion
+
+- Do not use any markdown formatting, use plain text suitable for PDF conversion
 - Write in third person, professional tone
 
 Conversation History:
 {messages}
 
-User Responses & Calculated Values (JSON):
+Heat Load Calculation Results (JSON) - PRIMARY FOCUS:
 {calculation_results}
 
 Building Parameters (JSON):
 {building_data}
 
-Generate a professional heat pump suitability assessment summary:"""
+Generate a professional heat pump suitability assessment summary that prominently features the heat load calculation results. Do not include any opinions or conclusions. Only include the facts and data from the heat load calculation results."""
+
+"""
+- Keep the summary concise but complete - aim for 2-4 paragraphs
+"""

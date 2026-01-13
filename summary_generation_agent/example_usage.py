@@ -19,7 +19,7 @@ def main():
     # Building data: Building parameters matching input_example.json format
     building_data = {
         "area": 100.0,
-        "N_f": 2,
+        "N_f": 1,
         "year": 1995,
         "postal_code": 81248,
         "n_walls_touching": 2,

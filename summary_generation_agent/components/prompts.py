@@ -5,7 +5,7 @@ SUMMARY_GENERATION_PROMPT = """You are a professional technical writer specializ
 Your task is to create a professional summary report for a heat pump suitability assessment based on:
 1. Conversation history with the property owner
 2. Heat load calculation results (calculation_results JSON) - PRIMARY FOCUS
-3. Building parameters and characteristics (building_data JSON)
+3. Building parameters and characteristics (building_parameters JSON)
 
 CRITICAL INSTRUCTIONS - HEAT LOAD CALCULATIONS ARE THE PRIMARY FOCUS:
 - Always HIGHLIGHT and prominently feature the heat load calculation results at the beginning or in a dedicated section with the heading "Heat Load Calculation Results"
@@ -34,7 +34,7 @@ Heat Load Calculation Results (JSON) - PRIMARY FOCUS:
 {calculation_results}
 
 Building Parameters (JSON):
-{building_data}
+{building_parameters}
 
 Generate a professional heat pump suitability assessment summary that prominently features the heat load calculation results. Do not include any opinions or conclusions. Only include the facts and data from the heat load calculation results."""
 

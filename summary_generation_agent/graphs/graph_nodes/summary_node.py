@@ -12,7 +12,7 @@ def summary_node(state: State) -> dict:
     """Generate summary based on messages history and JSON data.
     
     Args:
-        state: Current state containing messages history, conversation_data, and building_data.
+        state: Current state containing messages history, calculation_results, and building_parameters.
         
     Returns:
         Dictionary with generated summary.
@@ -23,17 +23,17 @@ def summary_node(state: State) -> dict:
         for msg in state.messages
     ])
     
-    # Format conversation_data (user responses and calculated values)
-    conversation_data_text = json.dumps(state.conversation_data, indent=2) if state.conversation_data else "No conversation data provided"
+    # Format calculation_results (user responses and calculated values)
+    conversation_data_text = json.dumps(state.calculation_results, indent=2) if state.calculation_results else "No conversation data provided"
     
-    # Format building_data (building parameters)
-    building_data_text = json.dumps(state.building_data, indent=2) if state.building_data else "No building data provided"
+    # Format building_parameters (building parameters)
+    building_data_text = json.dumps(state.building_parameters, indent=2) if state.building_parameters else "No building data provided"
     
     # Create prompt with messages and both JSON structures
     prompt = SUMMARY_GENERATION_PROMPT.format(
         messages=messages_text,
         calculation_results=conversation_data_text,
-        building_data=building_data_text
+        building_parameters=building_data_text
     )
     
     # Create messages for LLM

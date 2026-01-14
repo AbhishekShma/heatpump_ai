@@ -73,8 +73,8 @@ def main():
     # Create state with messages and both JSON structures
     state = State(
         messages=messages, 
-        conversation_data=conversation_data,
-        building_data=building_data
+        calculation_results=conversation_data,
+        building_parameters=building_data
     )
     
     # Invoke the graph

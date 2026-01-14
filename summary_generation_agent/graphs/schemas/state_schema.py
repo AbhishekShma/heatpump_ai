@@ -10,8 +10,8 @@ class State(BaseModel):
     
     Attributes:
         messages: List of chat messages (history) containing the conversation.
-        conversation_data: JSON data with user responses and calculated values (heat load, etc.).
-        building_data: JSON data with building parameters (area, year, renovations, etc.).
+        calculation_results: JSON data with user responses and calculated values (heat load, etc.).
+        building_parameters: JSON data with building parameters (area, year, renovations, etc.).
         summary: Generated summary (output).
     """
     messages: Annotated[
@@ -19,12 +19,12 @@ class State(BaseModel):
         Field(description="Contains the chat history")
     ] = []
     
-    conversation_data: Annotated[
+    calculation_results: Annotated[
         Optional[Dict[str, Any]],
         Field(description="JSON data with user responses and calculated values (heat load, transmission loss, etc.)", default=None)
     ] = None
     
-    building_data: Annotated[
+    building_parameters: Annotated[
         Optional[Dict[str, Any]],
         Field(description="JSON data with building parameters (area, year, renovations, insulation, etc.)", default=None)
     ] = None

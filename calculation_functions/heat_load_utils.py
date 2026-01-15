@@ -62,12 +62,31 @@ def get_n_walls_touching(json_data: Dict[str, Any]) -> int:
     return json_data.get('n_walls_touching', 0)
 
 
+def _normalize_insulation_value(value: Any) -> bool:
+    """
+    Normalize insulation value from JSON to boolean.
+    
+    Handles both boolean and string ("yes"/"no") inputs.
+    
+    Args:
+        value: Insulation value from JSON (bool, str, or None)
+    
+    Returns:
+        Boolean True if insulated, False otherwise
+    """
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        return value.lower() in ('yes', 'true', '1')
+    return False
+
+
 def _get_u_value_from_db(
     database_url: str,
     element_type: str,
     data_type: str,
     year: Optional[int],
-    insulation: Optional[str] = None,
+    insulation: Optional[bool] = None,
     country: str = 'DE'
 ) -> Optional[float]:
     """
@@ -78,7 +97,7 @@ def _get_u_value_from_db(
         element_type: Element type ('Wall', 'Roof', 'Floor', 'Window')
         data_type: Data type ('ReEx' for renovated, 'SyAv' for non-renovated)
         year: Construction year or replacement year. If None, year filter is ignored.
-        insulation: Insulation status ('yes' or 'no'), None to ignore filter
+        insulation: Insulation status (True for insulated, False for not insulated), None to ignore filter
         country: Country code, default 'DE'
     
     Returns:
@@ -92,24 +111,37 @@ def _get_u_value_from_db(
         cursor = conn.cursor(cursor_factory=RealDictCursor)
         
         # Build query - use quoted column names to handle case sensitivity
+        # For Roof/Wall with insulation='yes', skip Code_DataType_Construction and Code_Country filters
+        # (only one row exists for each)
+        skip_data_type_country = (insulation is True and 
+                                  element_type in ('Roof', 'Wall'))
+        
         query = """
         SELECT "U"
         FROM u_value_table_with_insulation
         WHERE "Code_ElementType" = %s
-          AND "Code_DataType_Construction" = %s
-          AND "Code_Country" = %s
         """
-        params = [element_type, data_type, country]
+        params = [element_type]
+        
+        # Add data type and country filters only if not skipping them
+        if not skip_data_type_country:
+            query += ' AND "Code_DataType_Construction" = %s'
+            query += ' AND "Code_Country" = %s'
+            params.extend([data_type, country])
         
         # Add year range filter only if year is provided
         if year is not None:
             query += ' AND "Year1_Construction"::integer <= %s AND "Year2_Construction"::integer >= %s'
             params.extend([year, year])
         
-        # Add insulation filter if provided
+        # Add insulation filter if provided - convert boolean to text for database query
         if insulation is not None:
+            # Database stores insulation as text ("yes"/"no" or "true"/"false")
+            # Convert boolean to text: True -> "yes" or "true", False -> "no" or "false"
+            # Based on DB schema, using "yes"/"no" format
+            insulation_text = "yes" if insulation else "no"
             query += ' AND "Insulation" = %s'
-            params.append(insulation)
+            params.append(insulation_text)
         
         # Order by U value descending to get highest, limit to 1
         # Cast U to numeric for proper ordering
@@ -259,21 +291,23 @@ def get_u_values(json_data: Dict[str, Any], database_url: Optional[str] = None) 
     
     # Get roof U-value
     roof_renovated = renovations.get('roof', False) if renovated else False
-    roof_insulated = json_data.get('roof_insulated', False)
+    roof_insulated = _normalize_insulation_value(json_data.get('roof_insulated', False))
     roof_data_type = 'ReEx' if roof_renovated else 'SyAv'
     
-    if roof_renovated and roof_insulated:
-        # Case 1: Renovated + Insulated = yes → Use Insulation='yes', ignore year (14cm insulation)
-        roof_u = _get_u_value_from_db(database_url, 'Roof', 'ReEx', None, 'yes')
+    # PRIORITY: If insulated, get ONLY insulation='yes' values
+    # For roof with insulation='yes', only one row exists (skips data_type and country filters)
+    if roof_insulated:
+        roof_u = _get_u_value_from_db(database_url, 'Roof', 'ReEx', None, True)
+        # No fallback without insulation filter - must have Insulation='yes'
     elif roof_renovated and not roof_insulated:
         # Case 2: Renovated + Insulated = no → Use highest U-value with Insulation='no'
-        roof_u = _get_u_value_from_db(database_url, 'Roof', 'ReEx', year, 'no')
+        roof_u = _get_u_value_from_db(database_url, 'Roof', 'ReEx', year, False)
     else:
-        # Case 3: Not renovated → Use highest U-value (SyAv, no insulation filter)
+        # Case 3: Not renovated and not insulated → Use highest U-value (SyAv, no insulation filter)
         roof_u = _get_u_value_from_db(database_url, 'Roof', 'SyAv', year)
     
-    if roof_u is None:
-        # Fallback to SyAv with highest U-value
+    if roof_u is None and not roof_insulated:
+        # Fallback to SyAv with highest U-value (no insulation filter) - only if NOT insulated
         roof_u = _get_u_value_from_db(database_url, 'Roof', 'SyAv', year)
     if roof_u is None:
         # If still None, try to get from JSON
@@ -288,21 +322,23 @@ def get_u_values(json_data: Dict[str, Any], database_url: Optional[str] = None) 
     
     # Get wall U-value
     wall_renovated = renovations.get('walls', False) if renovated else False
-    wall_insulated = json_data.get('walls_insulated', False)
+    wall_insulated = _normalize_insulation_value(json_data.get('walls_insulated', False))
     wall_data_type = 'ReEx' if wall_renovated else 'SyAv'
     
-    if wall_renovated and wall_insulated:
-        # Case 1: Renovated + Insulated = yes → Use Insulation='yes', ignore year (12cm insulation)
-        wall_u = _get_u_value_from_db(database_url, 'Wall', 'ReEx', None, 'yes')
+    # PRIORITY: If insulated, get ONLY insulation='yes' values
+    # For wall with insulation='yes', only one row exists (skips data_type and country filters)
+    if wall_insulated:
+        wall_u = _get_u_value_from_db(database_url, 'Wall', 'ReEx', None, True)
+        # No fallback without insulation filter - must have Insulation='yes'
     elif wall_renovated and not wall_insulated:
         # Case 2: Renovated + Insulated = no → Use highest U-value with Insulation='no'
-        wall_u = _get_u_value_from_db(database_url, 'Wall', 'ReEx', year, 'no')
+        wall_u = _get_u_value_from_db(database_url, 'Wall', 'ReEx', year, False)
     else:
-        # Case 3: Not renovated → Use highest U-value (SyAv, no insulation filter)
+        # Case 3: Not renovated and not insulated → Use highest U-value (SyAv, no insulation filter)
         wall_u = _get_u_value_from_db(database_url, 'Wall', 'SyAv', year)
     
-    if wall_u is None:
-        # Fallback to SyAv with highest U-value
+    if wall_u is None and not wall_insulated:
+        # Fallback to SyAv with highest U-value (no insulation filter) - only if NOT insulated
         wall_u = _get_u_value_from_db(database_url, 'Wall', 'SyAv', year)
     if wall_u is None:
         # If still None, try to get from JSON

@@ -1,0 +1,59 @@
+Questions List
+==============
+
+1. (ID: 41) Is it a new build or an existing building?
+   Mandatory for calculation: No
+
+2. (ID: 42) In what year was it built?
+   Mandatory for calculation: Yes
+
+3. (ID: 54) If you heat with oil, how many liters of heating oil do you use per year?
+   Mandatory for calculation: No
+
+4. (ID: 43) What is the heated area (m²)?
+   Mandatory for calculation: Yes
+
+5. (ID: 44) Has your house been renovated?
+   Mandatory for calculation: Yes
+
+6. (ID: 45) If yes, what was renovated: windows, roof, walls?
+   Mandatory for calculation: Yes
+
+7. (ID: 46) In what year were your windows replaced?
+   Mandatory for calculation: Yes
+
+8. (ID: 47) Is your roof insulated?
+   Mandatory for calculation: Yes
+
+9. (ID: 48) Are your walls insulated?
+   Mandatory for calculation: Yes
+
+10. (ID: 49) What type of heating system do you currently have?
+    Mandatory for calculation: No
+
+11. (ID: 52) Does your heating system also heat your hot water?
+    Mandatory for calculation: No
+
+12. (ID: 53) What was your average gas consumption in kWh over the last year?
+    Mandatory for calculation: No
+
+13. (ID: 55) How many people live in your household?
+    Mandatory for calculation: No
+
+14. (ID: 56) What is your postal code?
+    Mandatory for calculation: Yes
+
+15. (ID: 57) Do you own the house?
+    Mandatory for calculation: No
+
+16. (ID: 58) Are you replacing a functioning gas/oil heating system?
+    Mandatory for calculation: No
+
+17. (ID: 40) Do you own a single-family home or a multi-family home?
+    Mandatory for calculation: No
+
+18. (ID: 50) In what year was your heating system installed?
+    Mandatory for calculation: No
+
+19. (ID: 51) Do you have radiators, underfloor heating, or both?
+    Mandatory for calculation: No

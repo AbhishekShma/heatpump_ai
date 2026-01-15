@@ -79,7 +79,7 @@ def main():
     
     # Invoke the graph
     print("Generating summary...\n")
-    result = main_graph.invoke(state)
+    result = main_graph.invoke(state)dddddddddddddddddddddddddddd
     
     # Display the generated summary
     print("Generated Summary:")

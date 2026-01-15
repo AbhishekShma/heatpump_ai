@@ -22,7 +22,7 @@ def calculate_heat_load_from_json(
     json_path: Union[str, Path],
     database_url: str,
     h: float = 2.5,
-    f_floor: float = 1.0,
+    f_floor: float = 0.5,
     f_wall: float = 1.0,
     f_roof: float = 1.0,
     f_window: float = 1.0,
@@ -54,9 +54,17 @@ def calculate_heat_load_from_json(
     
     Returns:
         Dictionary containing:
-            - heat_load: Total heat load (W)
-            - H_t: Transmission heat transfer coefficient (W/K)
+            - heat_load: Total heat load (kW)
+            - H_t: Total transmission heat transfer coefficient (W/K)
+            - H_t_floor: Transmission heat transfer coefficient for floor (W/K)
+            - H_t_wall: Transmission heat transfer coefficient for walls (W/K)
+            - H_t_roof: Transmission heat transfer coefficient for roof (W/K)
+            - H_t_window: Transmission heat transfer coefficient for windows (W/K)
             - H_v: Ventilation heat transfer coefficient (W/K)
+            - V: Volume per floor (m³)
+            - V_total: Total volume across all floors (m³)
+            - n: Air change rate (1/h)
+            - N_f: Number of floors
             - Dt: Temperature difference (K)
     
     Raises:

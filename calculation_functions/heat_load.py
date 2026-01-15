@@ -21,7 +21,7 @@ def calculate_heat_load(
     U_window: float,
     t_indoor: float = 21,
     h: float = 2.5,
-    f_floor: float = 1.0,
+    f_floor: float = 0.5,
     f_wall: float = 1.0,
     f_roof: float = 1.0,
     f_window: float = 1.0,
@@ -62,9 +62,17 @@ def calculate_heat_load(
     
     Returns:
         Dictionary containing:
-            - heat_load: Total heat load (W)
-            - H_t: Transmission heat transfer coefficient (W/K)
+            - heat_load: Total heat load (kW)
+            - H_t: Total transmission heat transfer coefficient (W/K)
+            - H_t_floor: Transmission heat transfer coefficient for floor (W/K)
+            - H_t_wall: Transmission heat transfer coefficient for walls (W/K)
+            - H_t_roof: Transmission heat transfer coefficient for roof (W/K)
+            - H_t_window: Transmission heat transfer coefficient for windows (W/K)
             - H_v: Ventilation heat transfer coefficient (W/K)
+            - V: Volume per floor (m³)
+            - V_total: Total volume across all floors (m³)
+            - n: Air change rate (1/h)
+            - N_f: Number of floors
             - Dt: Temperature difference (K)
     
     Raises:
@@ -91,6 +99,7 @@ def calculate_heat_load(
     
     # Calculate volume per floor
     V = A * h
+    V_total = V * N_f  # Total volume across all floors
     
     # Calculate ventilation heat transfer coefficient
     # 0.34 is the volumetric heat capacity of air (Wh/(m³·K))
@@ -146,8 +155,16 @@ def calculate_heat_load(
     heat_load = (H_t + H_v) * Dt
     
     return {
-        'heat_load': heat_load,
+        'heat_load': heat_load/1000, # Convert to kW
         'H_t': H_t,
+        'H_t_floor': H_t_floor,
+        'H_t_wall': H_t_wall,
+        'H_t_roof': H_t_roof,
+        'H_t_window': H_t_window_total,
         'H_v': H_v,
+        'V': V,
+        'V_total': V_total,
+        'n': n,
+        'N_f': N_f,
         'Dt': Dt
     }

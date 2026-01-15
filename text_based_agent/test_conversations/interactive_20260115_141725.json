@@ -1,0 +1,75 @@
+{
+  "test_name": "interactive",
+  "timestamp": "20260115_141725",
+  "questions": "1.Do you own a single-family home or a multi-family home?\"\n\"2.Is it a new build or an existing building?\"\n\"3.In what year was it built?\"\n",
+  "messages": [
+    {
+      "type": "ai",
+      "content": "Hallo und herzlich willkommen! Ich bin Ihr Assistent für Wärmepumpen-Empfehlungen und unterstütze Sie gerne dabei, die passende Lösung für Ihr Zuhause zu finden. Um eine optimale Einschätzung zu geben, stelle ich Ihnen ein paar Fragen zu Ihrer Wohnsituation. Besitzen Sie ein Einfamilienhaus oder ein Mehrfamilienhaus?"
+    },
+    {
+      "type": "user",
+      "content": "in english"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for your message. I am your heat pump recommendation assistant.\n\nDo you own a single-family home or a multi-family home?"
+    },
+    {
+      "type": "user",
+      "content": "single"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for your answer. Is it a new build or an existing building?"
+    },
+    {
+      "type": "user",
+      "content": "new"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for your answer. In what year was it built?"
+    },
+    {
+      "type": "user",
+      "content": "1995"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you, all required information has been collected."
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for providing your answers! Please confirm that the following information is correct, or let me know if you would like to change anything:\n\n1. Do you own a single-family home or a multi-family home?  \n   Your answer: Single-family home\n\n2. Is it a new build or an existing building?  \n   Your answer: New build\n\n3. In what year was it built?  \n   Your answer: 1995\n\nIs everything correct, or would you like to make any changes?"
+    },
+    {
+      "type": "user",
+      "content": "no"
+    },
+    {
+      "type": "ai",
+      "content": "Vielen Dank, alle erforderlichen Informationen wurden gesammelt."
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for your response! Just to clarify, when you answered \"no,\" do you mean that some of the information is incorrect and you would like to change something? If so, please let me know which answer you'd like to update. If everything is correct, please confirm so I can proceed."
+    },
+    {
+      "type": "user",
+      "content": "no changes"
+    },
+    {
+      "type": "ai",
+      "content": "Vielen Dank, alle erforderlichen Informationen wurden gesammelt."
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for confirming! I will proceed with your provided information."
+    },
+    {
+      "type": "ai",
+      "content": "Thank you! I've gathered all the information I need. Here's a summary of your responses:\n\n1. Do you own a single-family home or a multi-family home?  \n   Answer: Single-family home\n\n2. Is it a new build or an existing building?  \n   Answer: New build\n\n3. In what year was it built?  \n   Answer: 1995\n\nI'll use this information to provide you with a personalized heat pump recommendation."
+    }
+  ]
+}

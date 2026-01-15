@@ -1,0 +1,143 @@
+{
+  "test_name": "interactive",
+  "timestamp": "20260115_141236",
+  "questions": "1.Do you own a single-family home or a multi-family home?\"\n\"2.Is it a new build or an existing building?\"\n\"3.In what year was it built?\"\n\"4.What is the heated area (m²)?\"\n\"5.Has your house been renovated?\"\n\"6.If yes, what was renovated: windows, roof, walls?\"\n\"7.In what year were your windows replaced?\"\n\"8.Is your roof insulated?\"\n\"9.Are your walls insulated?\"\n\"10.What type of heating system do you currently have, e.g., oil, gas, or electric?\"\n\"11.In what year was your heating system installed?\"\n\"12.Do you have radiators, underfloor heating, or both?\"\n\"13.Does your heating system also heat your hot water?\"\n\"14.What was your average gas consumption in kWh over the last three years? If this information is unavailable, at least over the last 12 months?\"\n\"15.If you heat with oil, how many liters of heating oil did you use in the last 12 months?\"\n\"16.How many people live in your household?\"\n\"17.What is your postal code?\"\n\"18.Do you own the house?\"\n\"19.Are you replacing a functioning gas/oil heating system?\"\n",
+  "messages": [
+    {
+      "type": "ai",
+      "content": "Herzlich willkommen! Ich bin Ihr Assistent für Wärmepumpen-Empfehlungen und unterstütze Sie gerne dabei, die passende Lösung für Ihr Zuhause zu finden. Um eine individuelle Beratung zu ermöglichen, stelle ich Ihnen einige Fragen zu Ihrer aktuellen Wohnsituation und Heizung. Starten wir gemeinsam: Besitzen Sie ein Einfamilienhaus oder ein Mehrfamilienhaus?"
+    },
+    {
+      "type": "user",
+      "content": "in english please"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for your message. I am your heat pump recommendation assistant and will help you find the right solution for your home. To begin, do you own a single-family home or a multi-family home?"
+    },
+    {
+      "type": "user",
+      "content": "single"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for your answer. Is it a new build or an existing building?"
+    },
+    {
+      "type": "user",
+      "content": "new"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for your response. In what year was it built?"
+    },
+    {
+      "type": "user",
+      "content": "1995"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for the information. What is the heated area in square meters (m²)?"
+    },
+    {
+      "type": "user",
+      "content": "100"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you. Has your house been renovated?"
+    },
+    {
+      "type": "user",
+      "content": "no"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for your answer. What type of heating system do you currently have, e.g., oil, gas, or electric?"
+    },
+    {
+      "type": "user",
+      "content": "oil"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you. In what year was your heating system installed?"
+    },
+    {
+      "type": "user",
+      "content": "2010"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you. Do you have radiators, underfloor heating, or both?"
+    },
+    {
+      "type": "user",
+      "content": "radiators"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you. Does your heating system also heat your hot water?"
+    },
+    {
+      "type": "user",
+      "content": "no"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you. How many liters of heating oil did you use in the last 12 months?"
+    },
+    {
+      "type": "user",
+      "content": "don't know"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for your response. If you're unsure, could you estimate whether your annual oil consumption was closer to 1,000 liters, 2,000 liters, or more than 3,000 liters? Any rough estimate will help."
+    },
+    {
+      "type": "user",
+      "content": "1000"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you. How many people live in your household?"
+    },
+    {
+      "type": "user",
+      "content": "5"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you. What is your postal code?"
+    },
+    {
+      "type": "user",
+      "content": "19766"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you. Do you own the house?"
+    },
+    {
+      "type": "user",
+      "content": "no"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for your answer. Are you replacing a functioning gas/oil heating system?"
+    },
+    {
+      "type": "user",
+      "content": "yes"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you. All required information has been collected."
+    },
+    {
+      "type": "ai",
+      "content": "Here is a summary of your answers:\n\n1. Do you own a single-family home or a multi-family home?  \n   – Single-family home\n\n2. Is it a new build or an existing building?  \n   – New build\n\n3. In what year was it built?  \n   – 1995\n\n4. What is the heated area (m²)?  \n   – 100 m²\n\n5. Has your house been renovated?  \n   – No\n\n6. If yes, what was renovated: windows, roof, walls?  \n   – N/A\n\n7. In what year were your windows replaced?  \n   – N/A\n\n8. Is your roof insulated?  \n   – N/A\n\n9. Are your walls insulated?  \n   – N/A\n\n10. What type of heating system do you currently have, e.g., oil, gas, or electric?  \n    – Oil\n\n11. In what year was your heating system installed?  \n    – 2010\n\n12. Do you have radiators, underfloor heating, or both?  \n    – Radiators\n\n13. Does your heating system also heat your hot water?  \n    – No\n\n14. What was your average gas consumption in kWh over the last three years? If this information is unavailable, at least over the last 12 months?  \n    – N/A\n\n15. If you heat with oil, how many liters of heating oil did you use in the last 12 months?  \n    – 1,000 liters\n\n16. How many people live in your household?  \n    – 5\n\n17. What is your postal code?  \n    – 19766\n\n18. Do you own the house?  \n    – No\n\n19. Are you replacing a functioning gas/oil heating system?  \n    – Yes\n\nPlease confirm if all these answers are correct or let me know if you would like to change anything."
+    }
+  ]
+}

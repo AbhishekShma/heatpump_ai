@@ -1,0 +1,67 @@
+{
+  "test_name": "interactive",
+  "timestamp": "20260115_130329",
+  "questions": "1. What is your house type? (detached, semi-detached, or apartment) [mandatory]\n2. What year was your house built?\n3. What is the approximate heated floor area in square meters?\n",
+  "messages": [
+    {
+      "type": "ai",
+      "content": "Hallo und herzlich willkommen! Ich bin Ihr Assistent für Wärmepumpen-Empfehlungen und unterstütze Sie gerne bei der Auswahl der passenden Lösung für Ihr Zuhause. Damit ich eine fundierte Empfehlung geben kann, stelle ich Ihnen ein paar Fragen zu Ihrer Wohnsituation. Beginnen wir: Um welchen Haustyp handelt es sich bei Ihnen – Einfamilienhaus, Doppelhaushälfte oder Wohnung?"
+    },
+    {
+      "type": "user",
+      "content": "don't understand german"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for letting me know! I'm a heat pump recommendation assistant. To start, could you please tell me your house type? Is it detached, semi-detached, or an apartment?"
+    },
+    {
+      "type": "user",
+      "content": "detached"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for your answer. Could you please tell me what year your house was built?"
+    },
+    {
+      "type": "user",
+      "content": "3000"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for your response. Just to clarify, did you mean your house was built in the year 3000, or was that a typo? Please provide the correct year of construction (for example: 1985, 2002, etc.)."
+    },
+    {
+      "type": "user",
+      "content": "1985"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you! What is the approximate heated floor area of your house in square meters?"
+    },
+    {
+      "type": "user",
+      "content": "500"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you! I have all your answers. Please review them below:\n\n1. What is your house type?  \n   Your answer: Detached\n\n2. What year was your house built?  \n   Your answer: 1985\n\n3. What is the approximate heated floor area in square meters?  \n   Your answer: 500\n\nCould you please confirm if all this information is correct, or would you like to change any response?"
+    },
+    {
+      "type": "user",
+      "content": "no"
+    },
+    {
+      "type": "ai",
+      "content": "I'm sorry, your response is a bit unclear. Could you please clarify: Is all the information correct, or would you like to change something?"
+    },
+    {
+      "type": "user",
+      "content": "the info is correct"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you! I've gathered all the necessary information."
+    }
+  ]
+}

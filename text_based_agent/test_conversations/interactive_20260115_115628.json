@@ -1,0 +1,67 @@
+{
+  "test_name": "interactive",
+  "timestamp": "20260115_115628",
+  "questions": "1. What is your house type? (detached, semi-detached, or apartment) [mandatory]\n2. What year was your house built?\n3. What is the approximate heated floor area in square meters?\n",
+  "messages": [
+    {
+      "type": "ai",
+      "content": "Hallo und herzlich willkommen! Ich bin Ihr Assistent für Wärmepumpen-Empfehlungen. Ich werde Ihnen helfen, eine passende Wärmepumpe für Ihr Zuhause zu finden, indem ich einige Fragen zu Ihrem Haus und Ihren Heizbedürfnissen stelle. Darf ich fragen, um welchen Haustyp es sich bei Ihnen handelt? (freistehend, Doppelhaushälfte oder Wohnung?)"
+    },
+    {
+      "type": "user",
+      "content": "guten tag"
+    },
+    {
+      "type": "ai",
+      "content": "Guten Tag! Ich bin ein Wärmepumpen-Beratungsassistent. Ich stelle Ihnen einige Fragen, um Ihre Bedürfnisse zu verstehen und eine personalisierte Wärmepumpen-Empfehlung zu geben. Lassen Sie mich beginnen: Um welchen Haustyp handelt es sich bei Ihnen? (freistehend, Doppelhaushälfte oder Wohnung?)"
+    },
+    {
+      "type": "user",
+      "content": "That's all the german I know"
+    },
+    {
+      "type": "ai",
+      "content": "Of course! I'll continue in English from now on. Could you please tell me what type of house you have? (detached, semi-detached, or apartment?)"
+    },
+    {
+      "type": "user",
+      "content": "Can you provide explainations for what these types are"
+    },
+    {
+      "type": "ai",
+      "content": "Certainly! Here are brief explanations of the different house types:\n\n1. **Detached**: This is a standalone house that is not connected to any other housing unit. It typically has its own surrounding land and offers the most privacy.\n\n2. **Semi-detached**: This type of house shares one wall with another house. It is essentially one half of a pair of houses built side by side, sharing a common wall. It offers more privacy than an apartment but less than a detached house.\n\n3. **Apartment**: An apartment is a single housing unit within a larger building. Apartments are typically part of a multi-unit building and share walls, floors, and ceilings with adjacent units.\n\nCould you let me know which type best describes your home?"
+    },
+    {
+      "type": "user",
+      "content": "year is 1940'"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for providing the year your house was built. Could you please tell me the approximate heated floor area of your house in square meters?"
+    },
+    {
+      "type": "user",
+      "content": "500"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for the information. To summarize, your house is approximately 500 square meters in heated floor area and was built in the 1940s. Could you please confirm the type of house you have (detached, semi-detached, or apartment) so I can complete the assessment?"
+    },
+    {
+      "type": "user",
+      "content": "no"
+    },
+    {
+      "type": "ai",
+      "content": "I understand that you're unsure about the house type. Let's figure it out together. Could you describe your home a bit? For example, do you have your own standalone building, or is your home connected to others? This will help me determine the right category."
+    },
+    {
+      "type": "user",
+      "content": "it's detached"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you! I've gathered all the information I need. Here's a summary of your responses:\n\n1. What is your house type? (detached, semi-detached, or apartment): Detached\n2. What year was your house built? 1940s\n3. What is the approximate heated floor area in square meters? 500\n\nI'll use this information to provide you with a personalized heat pump recommendation."
+    }
+  ]
+}

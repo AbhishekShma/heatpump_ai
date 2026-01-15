@@ -1,0 +1,59 @@
+{
+  "test_name": "interactive",
+  "timestamp": "20260115_143615",
+  "questions": "1.Do you own a single-family home or a multi-family home? [MANDATORY]\"\n\"2.Is it a new build or an existing building?\"\n\"3.In what year was it built?\"\n",
+  "messages": [
+    {
+      "type": "ai",
+      "content": "Hallo und herzlich willkommen! Ich bin Ihr Assistent für Wärmepumpen-Empfehlungen. Um die passende Lösung für Ihr Zuhause zu finden, führe ich eine kleine Heizungs-Bewertung durch und stelle Ihnen dazu einige Fragen. Darf ich gleich beginnen: Besitzen Sie ein Einfamilienhaus oder ein Mehrfamilienhaus?"
+    },
+    {
+      "type": "user",
+      "content": "don't know"
+    },
+    {
+      "type": "ai",
+      "content": "Danke für Ihre Rückmeldung. Um mit der Empfehlung fortfahren zu können, benötige ich diese Information: Handelt es sich bei Ihrer Immobilie um ein Einfamilienhaus (ein Haus für eine Familie) oder ein Mehrfamilienhaus (mehrere Wohneinheiten in einem Gebäude)? Können Sie das einschätzen?"
+    },
+    {
+      "type": "user",
+      "content": "in english"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for your response. To proceed with the recommendation, I need this information: Is your property a single-family home (a house for one family) or a multi-family home (a building with several separate apartments)? Can you specify which one it is?"
+    },
+    {
+      "type": "user",
+      "content": "odont know"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for your reply. This information is required to continue: Is your property a single-family home (one household, usually one main entrance) or a multi-family home (multiple separate apartments in one building, often with several entrances or doorbells)? Please let me know which one best describes your property."
+    },
+    {
+      "type": "user",
+      "content": "dont know"
+    },
+    {
+      "type": "ai",
+      "content": "This information is required to continue. The assessment cannot proceed without knowing whether your property is a single-family home or a multi-family home. \n\nIs your property a single-family home (one household, one main entrance) or a multi-family home (several separate apartments in one building)? Please let me know which one applies."
+    },
+    {
+      "type": "user",
+      "content": "don't know"
+    },
+    {
+      "type": "ai",
+      "content": "This information is required to continue. The assessment cannot proceed without knowing whether your property is a single-family home or a multi-family home.\n\nIs your property a single-family home (one household, one main entrance) or a multi-family home (several separate apartments in one building)? Please let me know which one applies."
+    },
+    {
+      "type": "user",
+      "content": "dont know"
+    },
+    {
+      "type": "ai",
+      "content": "This information is required to continue. The assessment cannot proceed without knowing whether your property is a single-family home or a multi-family home.\n\nIs your property a single-family home (one household, one main entrance) or a multi-family home (several separate apartments in one building)? Please let me know which one applies."
+    }
+  ]
+}

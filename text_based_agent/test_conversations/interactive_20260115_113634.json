@@ -1,0 +1,67 @@
+{
+  "test_name": "interactive",
+  "timestamp": "20260115_113634",
+  "questions": "1. What is your house type? (detached, semi-detached, or apartment) [mandatory]\n2. What year was your house built?\n3. What is the approximate heated floor area in square meters?\n",
+  "messages": [
+    {
+      "type": "ai",
+      "content": "Hallo und herzlich willkommen! Ich bin Ihr Assistent für Wärmepumpenempfehlungen. Gemeinsam werden wir eine Heizungsbewertung durchführen, indem wir einige Fragen zu Ihrem Zuhause besprechen. Darf ich fragen, um welchen Haustyp es sich bei Ihrem Zuhause handelt? Ist es freistehend, ein Doppelhaus oder eine Wohnung?"
+    },
+    {
+      "type": "user",
+      "content": "I don't understand"
+    },
+    {
+      "type": "ai",
+      "content": "Of course! I'll continue in English from now on. I'm your heat pump recommendation assistant, and I'll be asking you a series of questions to understand your needs and provide a personalized heat pump recommendation. Let's start: What is your house type? Is it detached, semi-detached, or an apartment?"
+    },
+    {
+      "type": "user",
+      "content": "Don't know"
+    },
+    {
+      "type": "ai",
+      "content": "That's okay! Let's see if we can figure it out together. Could you describe your home a bit more? For example, do you share walls with neighbors, or is your house standalone? This might help us determine the type."
+    },
+    {
+      "type": "user",
+      "content": "Don't know"
+    },
+    {
+      "type": "ai",
+      "content": "No problem! If you're unsure, I can help you based on other information. Could you tell me about the number of floors in your home or any other details that might help us identify its type?"
+    },
+    {
+      "type": "user",
+      "content": "no"
+    },
+    {
+      "type": "ai",
+      "content": "I understand. Without knowing the type of your home, it might be challenging to provide a specific heat pump recommendation. If you have any other details or later find out what type your home is, feel free to let me know. I'll be here to help!"
+    },
+    {
+      "type": "user",
+      "content": "dont know"
+    },
+    {
+      "type": "ai",
+      "content": "I understand that it's difficult to determine the type of your home right now. If you have any other information about your home, such as the year it was built or the approximate heated floor area, that could also help. Let me know if you can provide any of these details!"
+    },
+    {
+      "type": "user",
+      "content": "1995"
+    },
+    {
+      "type": "ai",
+      "content": "Great! Thank you for providing the year your house was built. Could you now tell me the approximate heated floor area in square meters?"
+    },
+    {
+      "type": "user",
+      "content": "176"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for providing the heated floor area. If you happen to find out more about the type of your home later, feel free to share that information with me. For now, I've gathered that your home was built in 1995 with a heated floor area of 176 square meters. If there's anything else you'd like to add or ask, feel free to let me know!"
+    }
+  ]
+}

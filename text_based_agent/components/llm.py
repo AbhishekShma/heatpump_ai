@@ -8,7 +8,7 @@ load_dotenv()
 
 # Initialize OpenAI LLM
 llm = ChatOpenAI(
-    model="gpt-4o",
+    model="gpt-4.1",
     streaming=False,
     temperature=0.7,
     max_tokens=4096

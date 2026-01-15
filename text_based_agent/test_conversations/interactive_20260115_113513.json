@@ -1,0 +1,11 @@
+{
+  "test_name": "interactive",
+  "timestamp": "20260115_113513",
+  "questions": "1. What is your house type? (detached, semi-detached, or apartment) [mandatory]\n2. What year was your house built?\n3. What is the approximate heated floor area in square meters?\n",
+  "messages": [
+    {
+      "type": "ai",
+      "content": "Guten Tag! Ich freue mich, Ihnen bei der Auswahl einer passenden Wärmepumpe zu helfen. Ich werde Ihnen ein paar Fragen zu Ihrem Zuhause stellen, um eine optimale Empfehlung geben zu können. Fangen wir an: Was ist Ihr Haustyp? (Einfamilienhaus, Doppelhaushälfte oder Wohnung?)"
+    }
+  ]
+}

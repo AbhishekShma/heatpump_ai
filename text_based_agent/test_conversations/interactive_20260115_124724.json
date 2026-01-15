@@ -1,0 +1,75 @@
+{
+  "test_name": "interactive",
+  "timestamp": "20260115_124724",
+  "questions": "1. What is your house type? (detached, semi-detached, or apartment) [mandatory]\n2. What year was your house built?\n3. What is the approximate heated floor area in square meters?\n",
+  "messages": [
+    {
+      "type": "ai",
+      "content": "Hallo und herzlich willkommen! Ich bin Ihr Assistent für die Wärmepumpen-Empfehlung. Ich freue mich darauf, eine Heizungsbewertung durchzuführen, indem ich Ihnen einige Fragen stelle. Zunächst einmal, um welche Art von Haus handelt es sich bei Ihrem Zuhause? Ist es ein freistehendes Haus, ein Reihenhaus oder eine Wohnung?"
+    },
+    {
+      "type": "user",
+      "content": "please speak in english"
+    },
+    {
+      "type": "ai",
+      "content": "Certainly! I'll switch to English. What type of house do you have? Is it detached, semi-detached, or an apartment?"
+    },
+    {
+      "type": "user",
+      "content": "don't know"
+    },
+    {
+      "type": "ai",
+      "content": "No problem! Let's figure it out together. Could you describe your home a bit? For example, is it a standalone building, part of a row of houses, or within a larger building with multiple units? This will help us determine the type."
+    },
+    {
+      "type": "user",
+      "content": "detached"
+    },
+    {
+      "type": "ai",
+      "content": "Great, thank you for clarifying! Next, could you tell me what year your house was built?"
+    },
+    {
+      "type": "user",
+      "content": "1600"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you! Now, could you please provide the approximate heated floor area of your house in square meters?"
+    },
+    {
+      "type": "user",
+      "content": "200"
+    },
+    {
+      "type": "ai",
+      "content": "Here is what I have so far:\n\n1. **House type:** Detached\n2. **Year built:** 1600\n3. **Approximate heated floor area:** 200 square meters\n\nCould you please confirm if this information is correct, or would you like to make any changes?"
+    },
+    {
+      "type": "user",
+      "content": "could you explain house types again"
+    },
+    {
+      "type": "ai",
+      "content": "Of course! I'll explain in English. \n\n- **Detached House:** A standalone building that doesn't share any walls with another building. It's typically surrounded by its own yard or garden.\n- **Semi-Detached House:** A house that shares one common wall with another house, essentially forming a pair of houses.\n- **Apartment:** A unit within a larger building that contains multiple such units. Apartments often share walls, floors, and ceilings with neighboring units.\n\nIf you have any more questions or need further clarification, feel free to ask!"
+    },
+    {
+      "type": "user",
+      "content": "house is detached"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for confirming! Here's the information we have:\n\n1. **House type:** Detached\n2. **Year built:** 1600\n3. **Approximate heated floor area:** 200 square meters\n\nThank you! I've gathered all the necessary information."
+    },
+    {
+      "type": "user",
+      "content": "hi"
+    },
+    {
+      "type": "ai",
+      "content": "Hello! I'm a heat pump recommendation assistant. I'll ask you a few questions to understand your needs and provide a personalized heat pump recommendation. Let me start: What type of house do you have? Is it detached, semi-detached, or an apartment?"
+    }
+  ]
+}

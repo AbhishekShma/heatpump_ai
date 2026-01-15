@@ -1,0 +1,59 @@
+{
+  "test_name": "full_conversation",
+  "timestamp": "20260115_124805",
+  "questions": "1. What is your house type? (detached, semi-detached, or apartment) [mandatory]\n2. What year was your house built?\n3. What is the approximate heated floor area in square meters?\n",
+  "messages": [
+    {
+      "type": "ai",
+      "content": "Hallo und herzlich willkommen! Ich bin Ihr Assistent für Wärmepumpen-Empfehlungen. Ich freue mich darauf, Sie bei der Auswahl der richtigen Wärmepumpe zu unterstützen, indem ich einige Fragen zu Ihrem Zuhause stelle. Darf ich fragen, um welche Art von Haus es sich bei Ihnen handelt? Ist es ein freistehendes Haus, ein Doppelhaus oder eine Wohnung?"
+    },
+    {
+      "type": "user",
+      "content": "The house type is a detached house."
+    },
+    {
+      "type": "ai",
+      "content": "Of course! I'll continue in English from now on. Thank you for letting me know that your house is a detached house. Could you please tell me what year your house was built?"
+    },
+    {
+      "type": "user",
+      "content": "100"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for providing the information. Now, could you please tell me the approximate heated floor area of your house in square meters?"
+    },
+    {
+      "type": "user",
+      "content": "I don't understand. Please speak in English."
+    },
+    {
+      "type": "ai",
+      "content": "Certainly! I'll switch to English. Could you please tell me the approximate heated floor area of your house in square meters?"
+    },
+    {
+      "type": "user",
+      "content": "1940"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for the information. To clarify, it seems like you might have provided a year. Could you please confirm the approximate heated floor area of your house in square meters?"
+    },
+    {
+      "type": "user",
+      "content": "Actually, I want to change the floor area to 120 square meters."
+    },
+    {
+      "type": "ai",
+      "content": "Could you please confirm if all this information is correct, or if you would like to make any changes?"
+    },
+    {
+      "type": "user",
+      "content": "Yes, everything is correct now."
+    },
+    {
+      "type": "ai",
+      "content": "Thank you! I've gathered all the necessary information."
+    }
+  ]
+}

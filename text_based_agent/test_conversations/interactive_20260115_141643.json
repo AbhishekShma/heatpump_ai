@@ -1,0 +1,35 @@
+{
+  "test_name": "interactive",
+  "timestamp": "20260115_141643",
+  "questions": "1.Do you own a single-family home or a multi-family home?\"\n\"2.Is it a new build or an existing building?\"\n\"3.In what year was it built?\"\n\"4.What is the heated area (m²)?\"\n\"5.Has your house been renovated?\"\n\"6.If yes, what was renovated: windows, roof, walls?\"\n\"7.In what year were your windows replaced?\"\n\"8.Is your roof insulated?\"\n\"9.Are your walls insulated?\"\n\"10.What type of heating system do you currently have, e.g., oil, gas, or electric?\"\n\"11.In what year was your heating system installed?\"\n\"12.Do you have radiators, underfloor heating, or both?\"\n\"13.Does your heating system also heat your hot water?\"\n\"14.What was your average gas consumption in kWh over the last three years? If this information is unavailable, at least over the last 12 months?\"\n\"15.If you heat with oil, how many liters of heating oil did you use in the last 12 months?\"\n\"16.How many people live in your household?\"\n\"17.What is your postal code?\"\n\"18.Do you own the house?\"\n\"19.Are you replacing a functioning gas/oil heating system?\"\n",
+  "messages": [
+    {
+      "type": "ai",
+      "content": "Hallo und herzlich willkommen! Ich bin Ihr Assistent für Wärmepumpen-Empfehlungen und unterstütze Sie gerne dabei, die passende Lösung für Ihr Zuhause zu finden. Dafür stelle ich Ihnen einige Fragen, um Ihre Heizsituation besser zu verstehen. Darf ich Sie zuerst fragen: Besitzen Sie ein Einfamilienhaus oder ein Mehrfamilienhaus?"
+    },
+    {
+      "type": "user",
+      "content": "in english please"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for your message. I am your heat pump recommendation assistant and will guide you through a few questions to find the best solution for your home.\n\nFirst question: Do you own a single-family home or a multi-family home?"
+    },
+    {
+      "type": "user",
+      "content": "single"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for your answer.\n\nIs it a new build or an existing building?"
+    },
+    {
+      "type": "user",
+      "content": "new"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for the information.\n\nIn what year was it built?"
+    }
+  ]
+}

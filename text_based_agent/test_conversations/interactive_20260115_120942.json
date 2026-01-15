@@ -1,0 +1,51 @@
+{
+  "test_name": "interactive",
+  "timestamp": "20260115_120942",
+  "questions": "1. What is your house type? (detached, semi-detached, or apartment) [mandatory]\n2. What year was your house built?\n3. What is the approximate heated floor area in square meters?\n",
+  "messages": [
+    {
+      "type": "ai",
+      "content": "Hallo und herzlich willkommen! Ich bin Ihr Assistent für Wärmepumpen-Empfehlungen. Um Ihnen optimal helfen zu können, möchte ich eine Heizungsbewertung durchführen, indem ich Ihnen einige Fragen stelle. Und hier ist die erste Frage: Was ist Ihr Haustyp? (freistehend, Doppelhaushälfte oder Wohnung?)"
+    },
+    {
+      "type": "user",
+      "content": "dontdont understand"
+    },
+    {
+      "type": "ai",
+      "content": "Natürlich! I'll continue in English from now on. I'm here to assist you with a heat pump recommendation. To get started, could you please tell me what type of house you have? Is it a detached house, semi-detached house, or an apartment?"
+    },
+    {
+      "type": "user",
+      "content": "detached"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for letting me know that your house is detached. Next, could you please tell me in what year your house was built?"
+    },
+    {
+      "type": "user",
+      "content": "1995"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you! Your house was built in 1995. Now, could you please tell me the approximate heated floor area of your house in square meters?"
+    },
+    {
+      "type": "user",
+      "content": "300"
+    },
+    {
+      "type": "ai",
+      "content": "Could you please confirm if this information is correct, or would you like to change anything?"
+    },
+    {
+      "type": "user",
+      "content": "area is actually 100"
+    },
+    {
+      "type": "ai",
+      "content": "Thank you for the update! The heated floor area is 100 square meters. \n\nI have gathered all the necessary information. Thank you!"
+    }
+  ]
+}

@@ -19,7 +19,7 @@ from heat_load_utils import (
 
 
 def calculate_heat_load_from_json(
-    json_path: Union[str, Path],
+    json_input: Union[str, Path],
     database_url: str,
     h: float = 2.5,
     f_floor: float = 0.5,
@@ -39,7 +39,7 @@ def calculate_heat_load_from_json(
     core heat load calculation function.
     
     Args:
-        json_path: Path to JSON file containing building parameters
+        json_input: Path to JSON file containing building parameters
         database_url: PostgreSQL database connection URL for fetching design temperature
         h: Height of each floor (m), default: 2.5
         f_floor: Correction factor for floor, default: 1.0
@@ -107,11 +107,11 @@ def calculate_heat_load_from_json(
         }
     """
     # Read JSON file
-    json_path = Path(json_path)
-    if not json_path.exists():
-        raise FileNotFoundError(f"JSON file not found: {json_path}")
+    json_input = Path(json_input)
+    if not json_input.exists():
+        raise FileNotFoundError(f"JSON file not found: {json_input}")
     
-    with open(json_path, 'r', encoding='utf-8') as f:
+    with open(json_input, 'r', encoding='utf-8') as f:
         json_data = json.load(f)
     
     # Extract required parameters from JSON

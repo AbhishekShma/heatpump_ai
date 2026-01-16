@@ -20,7 +20,7 @@ def confirmation_node(state: State) -> dict:
     if not state.all_questions_answered or state.user_satisfied_with_responses or state.conversation_complete:
         return {}
     # Format prompt with questions
-    prompt = CONFIRMATION_PROMPT.format(questions=state.questions)
+    prompt = CONFIRMATION_PROMPT.format(questions=state.questions, history=state.messages)
     system_message = SystemMessage(content=prompt)
     
     # Combine system message with conversation history

@@ -17,7 +17,7 @@ def summary_node(state: State) -> dict:
         Dictionary with summary message and completion flag.
     """
     # Only run if user satisfied and conversation not yet complete
-    if not state.user_satisfied_with_responses or state.conversation_complete:
+    if not state.all_questions_answered or not state.user_satisfied_with_responses or state.conversation_complete:
         return {}
     
     # Format prompt with questions

@@ -2,9 +2,13 @@
 
 CONFIRMATION_PROMPT = """You are a heat pump recommendation assistant. All questions have been answered by the user.
 
+CONVERSATION HISTORY:
+{history}
+-------------End of conversation history-------------------
 QUESTIONS:
 {questions}
 
+-----------End of questions---------------------
 Your task is to seek confirmation from the user that their answers are correct.
 
 INSTRUCTIONS:

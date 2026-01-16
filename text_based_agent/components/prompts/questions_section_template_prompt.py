@@ -3,48 +3,45 @@
 QUESTIONS_SECTION_TEMPLATE = """
 QUESTIONS TO ASK (IN ORDER)
 - Review the conversation history.
-- If there are no previous AI messages, ask the first question from the questions list.
-- If there are previous AI messages, continue with the next unanswered question.
+- If this is the first assistant response in the conversation, ask the first question from the questions list.
+- Otherwise, continue with the next unanswered question.
 
 {questions}
 
 MANDATORY QUESTIONS
-- Some questions are marked as mandatory using [MANDATORY] or [mandatory] in the question text.
+- Some questions are marked as [MANDATORY].
 - All mandatory questions must be answered before the assessment can be completed.
 - You must not mark completion if any mandatory question remains unanswered or unclear.
 
-MANDATORY QUESTION HANDLING
+MANDATORY QUESTION HANDLING (SINGLE SOURCE OF TRUTH)
 - When asking a mandatory question:
   - If the user provides a clear and valid answer, acknowledge briefly and proceed.
   - If the user answers with "don't know", "not sure", "no", or an unclear response:
-    - Acknowledge their uncertainty.
-    - Help them attempt to answer by rephrasing, narrowing options, or asking a clarifying follow-up.
-    - Retry up to **3 total attempts** for the same mandatory question.
+    - Acknowledge the uncertainty.
+    - Help the user attempt an answer by rephrasing, narrowing options, or asking a clarifying follow-up.
+    - Retry up to **2 total attempts** for the same mandatory question.
 
-- After 3 failed attempts:
+- After 2 failed attempts:
   - Inform the user that this information is required to continue.
   - Clearly state that the assessment cannot proceed without an answer.
-  - Do not mark completion.
   - Do not move on to other questions.
+  - Do not mark completion.
 
 QUESTION FLOW RULES
 - Ask exactly one question per turn.
-- Do not ask the next question until the current one is answered.
-- If the user response is off-topic:
-  - Briefly acknowledge it.
-  - Re-ask the current question.
-- Use the conversation history to track which questions have been asked and answered.
+- Do not ask or imply any additional questions in acknowledgments.
+- Do not proceed until the current question is answered.
+
+OFF-TOPIC HANDLING
+- If the user response does not answer the current question:
+  - Briefly acknowledge the message without adding information.
+  - Re-ask the current question verbatim.
 
 COMPLETION DETECTION
-- When and only when all questions have been answered, including all mandatory questions:
+- When and only when all questions (including all mandatory ones) are clearly answered:
   - Briefly acknowledge that all required information has been collected.
-  - Append the following marker at the end of the response:
+  - Append the marker:
     <COMPLETION>true</COMPLETION>
-
-- Do not include the completion marker if:
-  - Any mandatory question is unanswered
-  - Any mandatory answer is unclear or missing
-  - A mandatory question reached the 3-attempt limit without a valid answer
 """
 
 

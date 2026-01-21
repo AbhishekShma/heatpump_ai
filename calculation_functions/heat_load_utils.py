@@ -8,7 +8,7 @@ various parameters needed for heat load calculations from JSON data.
 from typing import Dict, Any, Optional
 import psycopg2
 from psycopg2.extras import RealDictCursor
-
+import numpy as np
 
 def get_air_change_rate(json_data: Dict[str, Any]) -> float:
     """
@@ -427,3 +427,8 @@ def get_t_design(json_data: Dict[str, Any], database_url: str) -> float:
         
     except psycopg2.Error as e:
         raise psycopg2.Error(f"Database error while fetching design temperature: {e}")
+
+def normalize(value):
+    if isinstance(value, np.generic):
+        return value.item()
+    return value

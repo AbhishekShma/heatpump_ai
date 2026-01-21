@@ -14,7 +14,8 @@ from heat_load_utils import (
     get_air_change_rate,
     get_n_walls_touching,
     get_u_values,
-    get_t_design
+    get_t_design,
+    normalize
 )
 
 
@@ -167,5 +168,5 @@ def calculate_heat_load_from_json(
         n_walls_touching=n_walls_touching,
         f_wall_touching=f_wall_touching
     )
-    
-    return result
+    return {k: normalize(v) for k, v in result.items()}
+    # return result

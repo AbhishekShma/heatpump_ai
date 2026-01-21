@@ -6,7 +6,8 @@ from heatpump_recommendation_utils import row_to_dict
 def heat_pump_recommendation(
     heat_load: float,
     db_url: str,
-    recommendation_radius: float = 2
+    recommendation_radius: float = 2,
+    number_of_recommendations: int = 10
 ) -> List[Dict]:
     """
     Returns heat pump models whose heat_output_35_kw is within
@@ -28,13 +29,13 @@ def heat_pump_recommendation(
         FROM heat_pump_models
         WHERE heat_output_35_kw BETWEEN %s AND %s
         ORDER BY cop_35 DESC NULLS LAST
-        LIMIT 10;
+        LIMIT %s;
     """
 
     conn = psycopg2.connect(db_url)
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            cur.execute(sql, (lower_bound, upper_bound))
+            cur.execute(sql, (lower_bound, upper_bound, number_of_recommendations))
             rows = cur.fetchall()
 
             result = []  # initialize list

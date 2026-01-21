@@ -161,3 +161,5 @@ agent_v2/livekit-voice-agent/random_dump.txt
 text_based_agent/**/__pycache__/
 text_based_agent/**/*.pyc
 text_based_agent/.pytest_cache/
+
+**/*Zone.Identifier*

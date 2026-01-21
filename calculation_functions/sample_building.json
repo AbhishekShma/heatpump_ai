@@ -12,7 +12,7 @@
   },
   "window_replacement_year": 2010,
   "roof_insulated": true,
-  "walls_insulated": true,
+  "walls_insulated": false,
   "n_walls_touching": 0,
   "h": 2.5,
   "f_floor": 0.5,

@@ -5,6 +5,11 @@ Your task is to explain to the user which subsidies they are eligible for, in cl
 professional, user-facing language. Include an introduction explaning that the section contains information about the subsidies the user is eligible for.
 
 ## Your Inputs
+### Stopping Criteria
+{stopping_criteria}
+
+If the stopping criteria is met, do not include any subsidies in the output.
+
 
 ### User Responses (from chat)
 {questions_chat}
@@ -54,6 +59,7 @@ If at least one of the recommended heat pumps is eligible for a model-dependent 
 ## Output Rules
 
 - Output MUST be plain text (no JSON)
+- If no subsidies are eligible, do not include any subsidies in the output and include a polite message saying that the user is not eligible for any subsidies.
 - Use clear headings for each subsidy with ***Heading*** format
 - For each subsidy include a clear line with it's percentage if available, as Percentage: <percentage>
 - Be concise, factual, and professional

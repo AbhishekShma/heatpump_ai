@@ -25,6 +25,7 @@ def subsidy_evaluator_node(state: SubsidyState) -> dict:
     """
     # Format inputs for the prompt
     # questions_chat_str = json.dumps(state.questions_chat, indent=2, ensure_ascii=False)
+    stopping_criteria_str = state.stopping_criteria
     questions_chat_str = state.questions_chat
     subsidy_table_str = json.dumps(state.subsidy_table, indent=2, ensure_ascii=False)
     heat_pump_list_str = json.dumps(state.recommended_heat_pump_list, indent=2, ensure_ascii=False)
@@ -33,7 +34,8 @@ def subsidy_evaluator_node(state: SubsidyState) -> dict:
     formatted_prompt = SUBSIDY_EVALUATION_PROMPT.format(
         questions_chat=questions_chat_str,
         subsidy_table=subsidy_table_str,
-        recommended_heat_pump_list=heat_pump_list_str
+        recommended_heat_pump_list=heat_pump_list_str,
+        stopping_criteria=stopping_criteria_str
     )
     
     # Create messages for LLM

@@ -8,7 +8,9 @@ from graphs.schemas.state_schema import SubsidyState
 def calculate_subsidies(
     questions_chat: Dict[str, Any],
     subsidy_table: Dict[str, Dict[str, Any]],
-    recommended_heat_pump_list: List[Dict[str, Any]]
+    recommended_heat_pump_list: List[Dict[str, Any]],
+    stopping_criteria: str
+
 ) -> Dict[str, str]:
     """Calculate subsidies based on user responses, subsidy table, and recommended heat pumps.
     
@@ -52,7 +54,8 @@ def calculate_subsidies(
     initial_state = SubsidyState(
         questions_chat=questions_chat,
         subsidy_table=subsidy_table,
-        recommended_heat_pump_list=recommended_heat_pump_list
+        recommended_heat_pump_list=recommended_heat_pump_list,
+        stopping_criteria=stopping_criteria
     )
     
     # Invoke the graph

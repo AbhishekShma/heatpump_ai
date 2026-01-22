@@ -15,6 +15,12 @@ class SubsidyState(BaseModel):
     """
     
     # Inputs
+
+    stopping_criteria: Annotated[
+        str,
+        Field(description="Stopping criteria for the subsidy calculation")
+    ] = ""
+    
     questions_chat: Annotated[
         str,
         Field(description="User responses from chat interface as JSON")

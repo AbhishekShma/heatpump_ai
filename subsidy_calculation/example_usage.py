@@ -10,10 +10,10 @@ from calculate_subsidies import calculate_subsidies
 # ---------------------------------------------------------------------
 # Example user responses – QUESTIONS KEPT AS-IS (verbatim)
 # ---------------------------------------------------------------------
-example_questions_chat = {
+example_questions_chat = """
     "Do you own a single-family home or a multi-family home?": "single-family home",
     "Is it a new build or an existing building?": "existing building",
-    "In what year was it built?": 1998,
+    "In what year was it built?": 2025,
     "What is the heated area (m²)?": 120,
     "Has your house been renovated?": "yes",
     "If yes, what was renovated: windows, roof, walls?": "windows, roof",
@@ -30,7 +30,7 @@ example_questions_chat = {
     "What is your postal code?": "80331",
     "Do you own the house?": "yes",
     "Are you replacing a functioning gas/oil heating system?": "yes"
-}
+"""
 
 
 # ---------------------------------------------------------------------
@@ -40,7 +40,7 @@ example_subsidy_table = {
     "1": {
         "sub_id": 1,
         "title": "Basic Heat Pump Subsidy",
-        "description": "30% basic subsidy for all heat pumps.",
+        "description": "30% basic subsidy for all heat pumps that we recommend. But this and all other subsidies are only to be applied if the house is older than 20 years, if not, no subsidy is applied, at all.",
         "is_active": True
     },
     "2": {
@@ -107,6 +107,7 @@ example_heat_pump_list = [
     }
 ]
 
+stopping_criteria = "If the house is older than 20 years, then no subsidy is applied, at all."
 
 def main():
     # print("=" * 60)
@@ -130,7 +131,8 @@ def main():
     result = calculate_subsidies(
         questions_chat=example_questions_chat,
         subsidy_table=example_subsidy_table,
-        recommended_heat_pump_list=example_heat_pump_list
+        recommended_heat_pump_list=example_heat_pump_list,
+        stopping_criteria=stopping_criteria
     )
 
     print("\nRESULT:")

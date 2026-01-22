@@ -24,7 +24,8 @@ def subsidy_evaluator_node(state: SubsidyState) -> dict:
         Dictionary with evaluation_results containing plain text explanation.
     """
     # Format inputs for the prompt
-    questions_chat_str = json.dumps(state.questions_chat, indent=2, ensure_ascii=False)
+    # questions_chat_str = json.dumps(state.questions_chat, indent=2, ensure_ascii=False)
+    questions_chat_str = state.questions_chat
     subsidy_table_str = json.dumps(state.subsidy_table, indent=2, ensure_ascii=False)
     heat_pump_list_str = json.dumps(state.recommended_heat_pump_list, indent=2, ensure_ascii=False)
     

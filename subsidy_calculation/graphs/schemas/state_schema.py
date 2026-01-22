@@ -16,7 +16,7 @@ class SubsidyState(BaseModel):
     
     # Inputs
     questions_chat: Annotated[
-        Dict[str, Any],
+        str,
         Field(description="User responses from chat interface as JSON")
     ] = {}
     

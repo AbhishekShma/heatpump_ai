@@ -59,4 +59,4 @@ def calculate_subsidies(
     final_state = subsidy_graph.invoke(initial_state)
     
     # Return the evaluation results (plain text)
-    return {"evaluation_results": final_state.get("evaluation_results", "")}
+    return {"subsidy_calculation_evaluation_results": final_state.get("evaluation_results", "")}

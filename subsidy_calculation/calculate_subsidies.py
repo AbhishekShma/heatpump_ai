@@ -6,7 +6,7 @@ from graphs.schemas.state_schema import SubsidyState
 
 
 def calculate_subsidies(
-    questions_chat: Dict[str, Any],
+    questions_chat:str,
     subsidy_table: Dict[str, Dict[str, Any]],
     recommended_heat_pump_list: List[Dict[str, Any]],
     stopping_criteria: str
@@ -37,18 +37,6 @@ def calculate_subsidies(
             - Total subsidy percentage (capped at 70% if applicable)
             - Message about 70% cap if applied
             - Message about model-dependent subsidies if applicable
-            
-    Example:
-        >>> result = calculate_subsidies(
-        ...     questions_chat={"income_level": "low", "home_age": "over_10_years"},
-        ...     subsidy_table={
-        ...         "1": {"sub_id": 1, "title": "Low Income Subsidy", "description": "...", "is_active": True, ...},
-        ...         "2": {"sub_id": 2, "title": "Efficiency Bonus", "description": "...", "is_active": True, ...}
-        ...     },
-        ...     recommended_heat_pump_list=[{"id": "hp1", "name": "EcoHeat 3000", ...}]
-        ... )
-        >>> print(result)
-        # Subsidy explanation text...
     """
     # Create initial state
     initial_state = SubsidyState(

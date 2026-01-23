@@ -32,7 +32,9 @@ QUESTIONS = """1.Do you own a single-family home or a multi-family home? [MANDAT
 def interactive_mode():
     messages = []
     last_result = {}
-
+    x = main_graph.get_graph().draw_mermaid_png()
+    with open("graph.png", "wb") as f:
+        f.write(x)
     # initial invoke
     state = State(messages=messages, questions=QUESTIONS)
     last_result = main_graph.invoke(state)

@@ -13,7 +13,7 @@ from calculate_subsidies import calculate_subsidies
 example_questions_chat = """
     "Do you own a single-family home or a multi-family home?": "single-family home",
     "Is it a new build or an existing building?": "existing building",
-    "In what year was it built?": 2025,
+    "In what year was it built?": 1986,
     "What is the heated area (m²)?": 120,
     "Has your house been renovated?": "yes",
     "If yes, what was renovated: windows, roof, walls?": "windows, roof",
@@ -107,23 +107,23 @@ example_heat_pump_list = [
     }
 ]
 
-stopping_criteria = "If the house is older than 20 years, then no subsidy is applied, at all."
+stopping_criteria = "If the house is newer than 20 years, then no subsidy is applied, at all."
 
 def main():
-    # print("=" * 60)
-    # print("SUBSIDY CALCULATION – RAW QUESTION TEST")
-    # print("=" * 60)
+    print("=" * 60)
+    print("SUBSIDY CALCULATION")
+    print("=" * 60)
 
-    # print("\nUser responses (raw):")
-    # print(json.dumps(example_questions_chat, indent=2, ensure_ascii=False))
+    print("\nUser responses (raw):")
+    print(example_questions_chat)
 
-    # print("\nHeat pumps:")
-    # for hp in example_heat_pump_list:
-    #     print(
-    #         f"- {hp['Manufacturer']} {hp['Type']} | "
-    #         f"{hp['heat_output_35_C_in_kw']} kW @35°C | "
-    #         f"{hp['Refrigerant']}"
-    #     )
+    print("\nHeat pumps:")
+    for hp in example_heat_pump_list:
+        print(
+            f"- {hp['Manufacturer']} {hp['Type']} | "
+            f"{hp['heat_output_35_C_in_kw']} kW @35°C | "
+            f"{hp['Refrigerant']}"
+        )
 
     print("\nRunning subsidy calculation...")
     print("-" * 60)
@@ -136,7 +136,7 @@ def main():
     )
 
     print("\nRESULT:")
-    print(result)
+    print(result["subsidy_calculation_evaluation_results"])
 
 
 if __name__ == "__main__":

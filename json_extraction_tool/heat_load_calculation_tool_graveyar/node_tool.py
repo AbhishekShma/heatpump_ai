@@ -3,7 +3,7 @@
 from typing import Dict, Any
 from langchain_core.messages import AIMessage
 
-from .tool import calculate_heat_load_from_summary
+from ..tool import calculate_heat_load_from_summary
 
 
 def heat_load_calculation_node(state: Dict[str, Any]) -> Dict[str, Any]:

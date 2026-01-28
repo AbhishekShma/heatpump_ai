@@ -419,9 +419,12 @@ def get_t_design(json_data: Dict[str, Any], database_url: str) -> float:
         conn.close()
         
         if result is None:
-            raise ValueError(
-                f"No design temperature found in database for postal code: {postal_code}"
-            )
+            # raise ValueError(
+            #     f"No design temperature found in database for postal code: {postal_code}"
+            # )
+            ##############Return default value -11.0 if postal code not found##############
+            return -11.0
+            ###############################################################################
         
         return float(result['design_temperature'])
         

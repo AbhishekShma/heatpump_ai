@@ -1,7 +1,7 @@
 """LangChain tool wrapper for text-based agent compatibility."""
 
 from langchain_core.tools import tool
-from .tool import calculate_heat_load_from_summary
+from ..tool import calculate_heat_load_from_summary
 
 
 @tool

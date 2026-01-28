@@ -14,7 +14,7 @@ load_dotenv()
 from graphs.schemas.state_schema import State
 from graphs.graph_nodes.greeting_node import greeting_node
 from graphs.graph_nodes.conversation_node import conversation_node
-from heat_load_calculation_tool import heat_load_calculation_node
+from json_extraction_tool import heat_load_calculation_node
 
 # Build the graph
 builder = StateGraph(State)

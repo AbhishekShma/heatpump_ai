@@ -9,7 +9,7 @@ from livekit import agents, rtc
 from livekit.agents import AgentServer, AgentSession, Agent, room_io
 from livekit.plugins import noise_cancellation, openai
 
-from heat_load_calculation_tool import heat_load_calculation_tool
+from json_extraction_tool import heat_load_calculation_tool
 from prompts import AGENT_INSTRUCTIONS  # Your existing prompts
 
 load_dotenv()

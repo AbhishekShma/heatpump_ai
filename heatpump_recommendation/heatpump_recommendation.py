@@ -16,7 +16,7 @@ def heat_pump_recommendation(
 
     lower_bound = heat_load - recommendation_radius
 
-    # upper_bound = heat_load + 
+    # upper_bound = heat_load + recommendation_radius
     
     # Changed as per client's reqest for the upper bound to be equal to heat load
     upper_bound = heat_load

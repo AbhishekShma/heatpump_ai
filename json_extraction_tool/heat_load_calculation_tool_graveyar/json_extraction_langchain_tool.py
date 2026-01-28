@@ -1,7 +1,7 @@
 """LangChain tool wrapper for text-based agent - JSON extraction only."""
 
 from langchain_core.tools import tool
-from .json_extraction_tool import extract_and_store_json
+from ..json_extraction_tool import extract_and_store_json
 import json
 
 

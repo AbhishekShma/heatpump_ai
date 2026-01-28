@@ -11,7 +11,7 @@ from langchain_openai import ChatOpenAI
 from .prompts import JSON_EXTRACTION_PROMPT
 
 # Initialize LLM for JSON extraction
-llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+llm = ChatOpenAI(model="gpt-4o", temperature=0)
 
 
 def extract_and_store_json(summary: str, output_dir: str = "json_outputs") -> Dict[str, Any]:

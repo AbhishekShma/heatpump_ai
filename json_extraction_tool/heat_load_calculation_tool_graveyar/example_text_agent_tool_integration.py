@@ -7,7 +7,7 @@ This shows how to bind the tool to the LLM so it can be called by the agent.
 from langchain_core.messages import AIMessage, SystemMessage, HumanMessage, ToolMessage
 from langchain_core.tools import tool
 
-from heat_load_calculation_tool import heat_load_calculation_tool_langchain
+from json_extraction_tool import heat_load_calculation_tool_langchain
 from components.llm import llm
 
 

@@ -10,7 +10,8 @@ RouteName = Literal["greeting", "conversation", "confirmation", "summary"]
 
 def router_node(state: AgentState) -> AgentState:
     """Router is a pure inspection step so it returns an empty delta."""
-
+    # if state.phase == "asking":
+        
     return {}
 
 
@@ -28,4 +29,4 @@ def determine_route(state: AgentState) -> RouteName:
     if phase == "finalized":
         return "summary"
 
-    raise ValueError(f"Unsupported phase value: {phase}")
+    # raise ValueError(f"Unsupported phase value: {phase}")

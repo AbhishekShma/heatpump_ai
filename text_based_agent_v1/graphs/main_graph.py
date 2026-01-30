@@ -35,3 +35,10 @@ for terminal_node in ("greeting", "conversation", "confirmation", "summary"):
     builder.add_edge(terminal_node, END)
 
 form_engine_graph = builder.compile()
+
+# x = form_engine_graph.get_graph().draw_mermaid_png()
+# with open("graph.png", "wb") as f:
+#     f.write(x)
+
+
+    

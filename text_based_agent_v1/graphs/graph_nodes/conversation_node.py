@@ -1,15 +1,15 @@
 """Conversation node placeholder."""
 from __future__ import annotations
 
-from graphs.schemas.state_schema import AgentState, Question
+from graphs.schemas.state_schema import AgentState
+from typing import Dict, Any
 
-
-def _format_question_prompt(question: Question, idx: int) -> str:
+def _format_question_prompt(question: Dict[str,Any], idx: int) -> str:
     """Mirror the phrasing style used in agent_1 when announcing questions."""
 
-    label = question.prompt or "(kein Text / missing text)"
-    prefix = "[MANDATORY] " if question.is_mandatory or question.required else ""
-    return f"Frage {idx + 1}: {prefix}{label}".strip()
+    question_text = question.get("question") or "no question found"
+    prefix = "[MANDATORY] " if question.get("is_mandatory_for_cal") else ""
+    return f"Question :{idx + 1}: {prefix}{question_text}".strip()
 
 
 def conversation_node(state: AgentState) -> AgentState:
@@ -18,7 +18,7 @@ def conversation_node(state: AgentState) -> AgentState:
     idx = state.get("current_index", 0)
     questions = state.get("questions", [])
     if idx < len(questions):
-        question: Question = questions[idx]
+        question = questions[idx]
         content = _format_question_prompt(question, idx)
     else:
         content = (
@@ -27,7 +27,7 @@ def conversation_node(state: AgentState) -> AgentState:
         )
 
     return {
-        "message_history": [
+        "messages": [
             {
                 "role": "assistant",
                 "content": content,

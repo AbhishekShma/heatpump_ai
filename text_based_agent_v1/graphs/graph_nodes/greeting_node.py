@@ -20,8 +20,7 @@ def greeting_node(state: AgentState) -> AgentState:
             f" There are {question_count} questions in total."
         )
 
-    return {
-        "has_greeted": True,
+    return {"has_greeted": True,
         "message_history": [
             {
                 "role": "assistant",

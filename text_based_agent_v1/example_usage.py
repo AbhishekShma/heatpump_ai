@@ -6,10 +6,10 @@ machine.
 """
 from __future__ import annotations
 
-from text_based_agent_v1 import create_initial_state, form_engine_graph
-from text_based_agent_v1.graphs.schemas.state_schema import Question
-
-
+# from text_based_agent_v1 import create_initial_state, form_engine_graph
+from graphs.schemas.state_schema import Question
+from graphs.main_graph import form_engine_graph
+from graphs.schemas.state_schema import create_initial_state
 def print_last_message(step_label: str, state) -> None:
     """Pretty-print the last assistant message for the demo."""
 
@@ -54,3 +54,7 @@ if __name__ == "__main__":
     # 4) Router -> Summary (terminal)
     state = form_engine_graph.invoke(state)
     print_last_message("summary", state)
+
+x = form_engine_graph.get_graph().draw_mermaid_png()
+with open("graph.png", "wb") as f:
+        f.write(x)

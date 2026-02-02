@@ -22,7 +22,7 @@ def _build_llm() -> ChatOpenAI:
         ChatOpenAI: Deterministic chat model configured via environment
             variables. Defaults to `gpt-4o-mini` for cost/performance balance.
     """
-    model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+    model = os.getenv("OPENAI_MODEL", "gpt-4o")
     temperature = float(os.getenv("OPENAI_TEMPERATURE", 0.0))
     return ChatOpenAI(model=model, temperature=temperature)
 

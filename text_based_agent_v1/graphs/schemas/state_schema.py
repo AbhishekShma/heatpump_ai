@@ -1,10 +1,71 @@
 """State models for the v1 conversational form engine."""
 from __future__ import annotations
 
-from typing import Annotated, Any, Dict, List, Literal, Optional, TypedDict
+from typing import Annotated, Any, Dict, List, Literal, Optional
 from langchain_core.messages import BaseMessage
 
 from pydantic import BaseModel, Field
+
+
+Phase = Literal["asking", "confirming", "finalized","greeting"]
+Language = Literal["en", "de"]
+
+
+class AgentState(BaseModel):
+    """Authoritative state for the deterministic form engine."""
+    messages: Annotated[
+        List[BaseMessage], 
+        Field(description="Contains the chat history")
+    ]
+    phase: Annotated[
+        Phase, 
+        Field(description="Current phase of the form engine")
+        ]
+    current_index: Annotated[
+        int, 
+        Field(description="Index of the current question being asked")]
+    questions: Annotated[
+        List[Dict[str, Any]], 
+        Field(description="List of questions to be asked")
+        ]
+    answers: Annotated[
+        Dict[str, Any], 
+        Field(description="Answers to the questions")
+        ]
+    pending_update_question_id: Annotated[
+        Optional[str], 
+        Field(description="ID of the question pending update")
+        ]
+    language: Annotated[
+        Language, 
+        Field(description="Contains language the agent is to communicate in")
+        ]
+    
+    conversation_id: str
+    # message_history: Annotated[List[MessageEntry], append_message_history]
+    # has_greeted: bool
+
+
+
+# def create_initial_state(
+#     *,
+#     questions: Optional[List[Question]] = None,
+#     language: Language = "de",
+#     phase: Phase = "asking",
+# ) -> AgentState:
+#     """Helper factory used by tests and example scripts."""
+
+#     return {
+#         "phase": phase,
+#         "current_index": 0,
+#         "questions": questions or [],
+#         "answers": {},
+#         "pending_update_question_id": None,
+#         "language": language,
+#         "message_history": [],
+#         "has_greeted": False,
+#             "conversation_id": 1,
+#     }
 
 # Phase = Literal["asking", "confirming", "finalized"]
 # Language = Literal["en", "de"]
@@ -91,45 +152,3 @@ MessageEntry = Dict[str, str]
 #             merged[question_id] = Answer.model_validate(answer)
 #     return merged
 
-
-Phase = Literal["asking", "confirming", "finalized"]
-Language = Literal["en", "de"]
-
-
-class AgentState(TypedDict):
-    """Authoritative state for the deterministic form engine."""
-    messages: Annotated[
-        List[BaseMessage], 
-        Field(description="Contains the chat history")
-    ]
-    phase: Annotated[Phase, Field(description="Current phase of the form engine")]
-    current_index: Annotated[int, Field(description="Current question index")]
-    questions: Annotated[List[Dict[str, Any]], Field(description="List of questions in the form")]
-    answers: Annotated[Dict[str, Any], Field(description="Answers to the questions")]
-    pending_update_question_id: Annotated[Optional[str], Field(description="ID of the question pending update")]
-    language: Annotated[Language, Field(description="Contains language the agent is to communicate in")]
-    # message_history: Annotated[List[MessageEntry], append_message_history]
-    # has_greeted: bool
-    conversation_id: str
-
-
-
-# def create_initial_state(
-#     *,
-#     questions: Optional[List[Question]] = None,
-#     language: Language = "de",
-#     phase: Phase = "asking",
-# ) -> AgentState:
-#     """Helper factory used by tests and example scripts."""
-
-#     return {
-#         "phase": phase,
-#         "current_index": 0,
-#         "questions": questions or [],
-#         "answers": {},
-#         "pending_update_question_id": None,
-#         "language": language,
-#         "message_history": [],
-#         "has_greeted": False,
-#             "conversation_id": 1,
-#     }

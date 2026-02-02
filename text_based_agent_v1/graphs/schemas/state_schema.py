@@ -41,7 +41,10 @@ class AgentState(BaseModel):
         Field(description="Contains language the agent is to communicate in")
         ]
     
-    conversation_id: str
+    conversation_id: Annotated[
+        str,
+        Field(description="Unique identifier for the conversation")
+    ]
     # message_history: Annotated[List[MessageEntry], append_message_history]
     # has_greeted: bool
 

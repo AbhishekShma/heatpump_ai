@@ -33,7 +33,7 @@ def conversation_node(state: AgentState) -> Dict[str, Any]:
 
     question_to_pas_to_llm = _format_question_prompt(question, idx)
 
-    agent_message = 
+    agent_message =
 
     # idx = state.get("current_index", 0)
     # questions = state.get("questions", [])

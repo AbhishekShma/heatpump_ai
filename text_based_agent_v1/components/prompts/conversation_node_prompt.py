@@ -2,5 +2,5 @@ from langchain_core.prompts import ChatPromptTemplate,SystemMessagePromptTemplat
 
 
 CONVERSATION_NODE_PROMPT = ChatPromptTemplate.from_messages([
-    
-]
+
+])
